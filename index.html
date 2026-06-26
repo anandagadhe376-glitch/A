@@ -2478,6 +2478,9 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   // Also try immediately in case already loaded
   document.addEventListener('DOMContentLoaded', function(){
     setTimeout(renderCouponStrip, 500);
+    // ✅ FIX: Retry after longer delays — Firebase 3-5 sec le sakta hai
+    setTimeout(renderCouponStrip, 2000);
+    setTimeout(renderCouponStrip, 5000);
   });
 })();
 </script>
@@ -3154,44 +3157,92 @@ window.__loadMenu = async function() {
 
   // ── Load coupons from Firebase (added from billing.html) ──
   try {
-    onSnapshot(window._sipCol('coupons'), couponSnap => {
+    const rid = window._sip_restaurantId || '';
+    console.log('[Siplora] Coupons load ho rahi hain. restaurantId =', rid);
+
+    // ✅ FIX: Pehle restaurantId filter se try karo, agar empty aaye toh
+    //         direct 'coupons' collection se bhi try karo (some billing panels
+    //         may not save restaurantId field in coupon docs).
+    const { collection: _col2, query: _q2, where: _w2, onSnapshot: _ons2 } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+
+    const colorOptions = [
+      {color:'green',  bg:'rgba(34,197,94,0.12)',  clr:'#22c55e'},
+      {color:'golden', bg:'rgba(234,179,8,0.12)',  clr:'#EAB308'},
+      {color:'purple', bg:'rgba(168,85,247,0.12)', clr:'#A855F7'},
+      {color:'red',    bg:'rgba(239,68,68,0.12)',  clr:'#ef4444'},
+      {color:'teal',   bg:'rgba(20,184,166,0.12)', clr:'#14B8A6'},
+    ];
+
+    function processCouponSnap(couponSnap) {
+      console.log('[Siplora] Coupon snapshot total docs:', couponSnap.size);
       window.__fbCoupons = [];
-      const colorOptions = [
-        {color:'green', bg:'rgba(34,197,94,0.12)', clr:'#22c55e'},
-        {color:'golden', bg:'rgba(234,179,8,0.12)', clr:'#EAB308'},
-        {color:'purple', bg:'rgba(168,85,247,0.12)', clr:'#A855F7'},
-        {color:'red', bg:'rgba(239,68,68,0.12)', clr:'#ef4444'},
-        {color:'teal', bg:'rgba(20,184,166,0.12)', clr:'#14B8A6'},
-      ];
       let ci = 0;
       couponSnap.forEach(d => {
         const raw = {...d.data(), id: d.id};
+        console.log('[Siplora] Coupon doc:', raw);
+        // ✅ Client-side restaurantId filter — agar doc mein restaurantId nahi hai toh bhi show karo
+        if(rid && raw.restaurantId && raw.restaurantId !== rid) {
+          console.log('[Siplora] Coupon skip (restaurantId mismatch):', raw.code, raw.restaurantId);
+          return;
+        }
         const col = colorOptions[ci % colorOptions.length];
         ci++;
-        // Normalize billing coupon fields → menu coupon fields
         const c = {
           id: raw.id,
           code: raw.code || '',
-          // discount: prefer pct for percent type, flat for flat type
           discount: raw.type==='flat' ? (raw.flat||raw.discount||0) : (raw.pct||raw.discount||0),
           type: raw.type || 'percent',
-          desc: raw.desc || '',
-          minOrder: raw.minorder || raw.minOrder || 0,
+          desc: raw.desc || raw.description || '',
+          minOrder: raw.minorder || raw.minOrder || raw.min_order || 0,
           color: raw.color || col.color,
           emoji: raw.emoji || '🎟️',
           bg: raw.bg || col.bg,
           clr: raw.clr || col.clr,
           active: raw.active !== false,
-          expiry: raw.expiry || '',
+          expiry: raw.expiry || raw.expiryDate || '',
         };
-        if(c.code && c.active) window.__fbCoupons.push(c);
+        if(c.code && c.active) {
+          window.__fbCoupons.push(c);
+          console.log('[Siplora] ✅ Coupon added:', c.code, c.discount, c.type);
+        } else {
+          console.log('[Siplora] ⏭ Coupon skip (inactive/no code):', raw.code, 'active=', raw.active);
+        }
       });
-      console.log('☁ Coupons loaded from Firebase:', window.__fbCoupons.length);
+      console.log('[Siplora] ☁ Total coupons show hone wale:', window.__fbCoupons.length);
+
+      // ✅ Update cart coupon dropdown bhi
+      const cartSel = document.getElementById('cartCouponSelect');
+      if(cartSel) {
+        const prev = cartSel.value;
+        cartSel.innerHTML = '<option value="">-- Select Coupon --</option>' +
+          window.__fbCoupons.map(c=>`<option value="${c.code}">${c.code}${c.type==='flat'?' (₹'+c.discount+' off)':' ('+c.discount+'% off)'}</option>`).join('');
+        if(prev) cartSel.value = prev;
+      }
+
       if(typeof renderOffersPanel === 'function') renderOffersPanel();
       if(typeof renderCoupons === 'function') renderCoupons();
       if(typeof window._renderCouponStrip === 'function') window._renderCouponStrip();
+    }
+
+    // Try with restaurantId filter first
+    let ridQuery;
+    if(rid) {
+      ridQuery = _q2(_col2(db, 'coupons'), _w2('restaurantId', '==', rid));
+    } else {
+      ridQuery = _col2(db, 'coupons');
+    }
+    _ons2(ridQuery, snap => {
+      if(snap.size === 0 && rid) {
+        // ✅ Fallback: restaurantId se kuch nahi mila, seedha collection try karo
+        console.warn('[Siplora] restaurantId filter se 0 coupons — fallback: all coupons check kar rahe hain');
+        _ons2(_col2(db, 'coupons'), fallbackSnap => {
+          processCouponSnap(fallbackSnap);
+        });
+      } else {
+        processCouponSnap(snap);
+      }
     });
-  } catch(e) { console.error('Coupons load error:', e); }
+  } catch(e) { console.error('[Siplora] Coupons load error:', e); }
 
   // ── Load custom categories from Firebase (saved from billing.html menuCategories) ──
   try {
@@ -3701,6 +3752,38 @@ function toggleCouponDropdown() {
   const btn = document.getElementById('couponToggleBtn');
   if(!dd) return;
   const open = dd.style.display === 'flex';
+  if(!open) {
+    // ✅ FIX: Har baar open hone pe fresh coupons render karo (Firebase se aa gaye honge)
+    const allC = window.__fbCoupons || [];
+    if(!allC.length) {
+      dd.innerHTML = '<div style="text-align:center;padding:16px;color:rgba(241,240,255,0.4);font-size:12px;">☁️ Coupons load ho rahe hain... thoda wait karo</div>';
+    } else {
+      dd.innerHTML = allC.map(function(c) {
+        var available = cartTotal() >= (c.minOrder||0);
+        var discLabel = c.type==='flat' ? '₹'+c.discount : c.discount+'%';
+        var discUnit  = c.type==='flat' ? 'FLAT' : 'OFF';
+        var bg  = c.bg  || 'rgba(168,85,247,0.12)';
+        var clr = c.clr || '#A855F7';
+        var col = c.color || 'purple';
+        var applyBtn  = available ? '<button class="coupon-copy-btn" style="background:'+bg+';color:'+clr+';border:1px solid '+clr+'33;font-size:10px;padding:5px 10px;margin-right:10px;" onclick="event.stopPropagation();cartApplyCouponCard(\''+c.code+'\')">Apply</button>' : '';
+        var statusHtml = available
+          ? '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Available'
+          : '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg> Add ₹'+((c.minOrder||0)-cartTotal())+' more';
+        return '<div class="coupon-card '+col+'" onclick="'+(available ? 'cartApplyCouponCard(\''+c.code+'\')' : 'event.stopPropagation()')+'" style="opacity:'+(available?'1':'0.6')+';cursor:'+(available?'pointer':'not-allowed')+';position:relative;">'
+          +'<div class="coupon-left" style="background:'+bg+';">'
+          +'<div class="coupon-disc-num" style="color:'+clr+';font-size:22px;">'+discLabel+'</div>'
+          +'<div class="coupon-disc-pct" style="color:'+clr+';">'+discUnit+'</div>'
+          +'</div>'
+          +'<div class="coupon-right" style="padding:10px 10px 10px 14px;">'
+          +'<div class="coupon-code" style="font-size:14px;">'+c.code+'</div>'
+          +'<div class="coupon-desc">'+(c.desc||'')+'</div>'
+          +'<div class="coupon-min" style="background:'+bg+';color:'+clr+';">'+statusHtml+'</div>'
+          +'</div>'
+          +applyBtn
+          +'</div>';
+      }).join('');
+    }
+  }
   dd.style.display = open ? 'none' : 'flex';
   if(btn) btn.textContent = open ? 'View All ▼' : 'Hide ▲';
 }
