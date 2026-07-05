@@ -3604,7 +3604,7 @@ function renderAdsCarousel(liveAds) {
     const subText = ad.subCaption || ad.subtitle || ad.desc || ad.description || '';
     const offerText = ad.offer || ad.badge || ad.tag || '';
 
-    return `<div class="ad-card" onclick="openAdModal(${i})">
+    return `<div class="ad-card" data-ad-id="${ad._docId}" onclick="handleAdClick(${i})">
       ${mediaHtml}
       <div class="ad-overlay"></div>
       ${offerText ? `<div class="ad-badge">${offerText}</div>` : ''}
@@ -3615,12 +3615,15 @@ function renderAdsCarousel(liveAds) {
           ${ad.rating ? `<div class="ad-rating">⭐ ${ad.rating}</div>` : ''}
           ${ad.price  ? `<div class="ad-price">${ad.price}</div>` : ''}
         </div>
+        ${ad.actionLink ? `<div class="ad-action-btn" style="margin-top:8px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:99px;background:linear-gradient(135deg,#00E5FF,#3B82F6);color:#000;font-weight:800;font-size:13px;">${ad.actionText || 'View Now'} ›</div>` : ''}
       </div>
     </div>`;
   }).join('');
 
   dots.innerHTML = liveAds.map((_,i) =>
     `<div class="dot ${i===0?'active':''}" id="dot-${i}"></div>`).join('');
+
+  observeAdImpressions();
 
   // Reset auto-scroll
   if (adAutoTimer) clearInterval(adAutoTimer);
@@ -3642,6 +3645,77 @@ function renderAdsCarousel(liveAds) {
 function updateDots(total) {
   document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentAdIndex));
 }
+
+/* ══ ADS ANALYTICS — event logging ══ */
+// Writes a single event to Firestore `adEvents` collection.
+// type: 'impression' | 'engaged_view' | 'click' | 'order'
+async function logAdEvent(adId, restaurantId, type) {
+  try {
+    if (!adId || !window.__db || !window.__addDoc || !window.__col || !window.__serverTimestamp) return;
+    const now = new Date();
+    const dateKey = now.toISOString().slice(0, 10); // YYYY-MM-DD, used for day/week/month rollups
+    await window.__addDoc(window.__col(window.__db, 'adEvents'), {
+      adId,
+      restaurantId: restaurantId || window._sip_restaurantId || '',
+      type,
+      dateKey,
+      timestamp: window.__serverTimestamp()
+    });
+  } catch (e) { console.warn('[Ads Analytics] event log failed:', e); }
+}
+window.logAdEvent = logAdEvent;
+
+// Counts an ad as "seen" once per page load (impression),
+// and as "engaged view" if it stayed visible 2.5s+ (achhe se dekha).
+window._adImpressionsSeen = window._adImpressionsSeen || new Set();
+window._adEngagedTimers   = window._adEngagedTimers   || {};
+
+function observeAdImpressions() {
+  if (window._adImpressionObserver) window._adImpressionObserver.disconnect();
+  const cards = document.querySelectorAll('#adsTrack .ad-card[data-ad-id]');
+  if (!cards.length) return;
+
+  window._adImpressionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const adId = entry.target.getAttribute('data-ad-id');
+      const ad = (window._liveAds || []).find(a => a._docId === adId);
+      if (!ad) return;
+
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+        if (!window._adImpressionsSeen.has(adId)) {
+          window._adImpressionsSeen.add(adId);
+          logAdEvent(adId, ad.restaurantId, 'impression');
+        }
+        if (!window._adEngagedTimers[adId]) {
+          window._adEngagedTimers[adId] = setTimeout(() => {
+            logAdEvent(adId, ad.restaurantId, 'engaged_view');
+            window._adEngagedTimers[adId] = null;
+          }, 2500);
+        }
+      } else if (window._adEngagedTimers[adId]) {
+        clearTimeout(window._adEngagedTimers[adId]);
+        window._adEngagedTimers[adId] = null;
+      }
+    });
+  }, { threshold: [0, 0.6, 1] });
+
+  cards.forEach(c => window._adImpressionObserver.observe(c));
+}
+window.observeAdImpressions = observeAdImpressions;
+
+// Click on an ad card: log the click, then either jump straight to the
+// action link (if the admin added one) or open the details modal like before.
+function handleAdClick(i) {
+  const ads = window._liveAds || [];
+  const ad  = ads[i]; if (!ad) return;
+  logAdEvent(ad._docId, ad.restaurantId, 'click');
+  if (ad.actionLink) {
+    window.open(ad.actionLink, '_blank', 'noopener');
+  } else {
+    openAdModal(i);
+  }
+}
+window.handleAdClick = handleAdClick;
 
 function openAdModal(i) {
   const ads = window._liveAds || [];
@@ -4156,7 +4230,7 @@ function addToCartFromModal() {
   else if(modalItem?.isAd && modalItem.adData?.linkedDish) {
     let found=null;
     for(const cat of APP_DATA.categories){ found=cat.dishes?.find(d=>d.name.toLowerCase().includes((modalItem.adData.linkedDish||'').toLowerCase())); if(found) break; }
-    if(found) addToCart({id:found.id,name:found.name,image:found.image,price:found.price});
+    if(found) addToCart({id:found.id,name:found.name,image:found.image,price:found.price,sourceAdId:modalItem.adData._docId,sourceAdRestaurantId:modalItem.adData.restaurantId});
     else showToast('Dish not found in menu, add manually');
   }
 }
@@ -5015,6 +5089,14 @@ async function placeOrder() {
       }
     }
   } catch(e){ console.error('Order save error:',e); }
+  // Ads Analytics: if any cart item was added via an ad, count this as an order for that ad
+  try {
+    const attributedAdIds = [...new Set(cartItems.filter(i => i.sourceAdId).map(i => i.sourceAdId))];
+    attributedAdIds.forEach(adId => {
+      const src = cartItems.find(i => i.sourceAdId === adId);
+      logAdEvent(adId, src?.sourceAdRestaurantId, 'order');
+    });
+  } catch(e){ console.warn('[Ads Analytics] order attribution failed:', e); }
   // Save order details for Orders panel
   window._lastPlacedOrder = {...orderData};
   window._orderCountdownTotal = 15 * 60;
