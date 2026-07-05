@@ -2973,13 +2973,19 @@ function startAdsListener() {
   try {
     // ✅ FIX: orderBy hata diya — Firestore composite index ki zarurat nahi
     // Sorting ab memory mein hogi (order field ke hisaab se)
-    const q = window.__col(db, 'ads');
+    // ✅ FIX: pehle `window.__col(db,'ads')` use ho raha tha jo SAARE
+    // restaurants ke ads khinch leta tha. Ab `_sipCol('ads')` use karo
+    // taaki sirf isi restaurant (?rid=) ke ads aayein — jaise menuItems/coupons.
+    const q = window._sipCol('ads');
     window.__onSnapshot(q, snap => {
       const allAds = [];
       snap.forEach(d => allAds.push({ ...d.data(), _docId: d.id }));
-      // Only show active ads in menu, sort by order field in memory
+      // Extra safety: agar kisi purani ad me restaurantId save nahi hua tha,
+      // usse yahan bhi drop kar do taaki wo galti se kisi aur restaurant ko na dikhe.
+      const rid = window._sip_restaurantId;
       window._liveAds = allAds
         .filter(a => a.active !== false)
+        .filter(a => !rid || a.restaurantId === rid)
         .sort((a, b) => (a.order || 99) - (b.order || 99));
       window.dispatchEvent(new CustomEvent('ads-live-updated'));
     }, err => {
