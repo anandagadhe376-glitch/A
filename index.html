@@ -1029,6 +1029,19 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 </head>
 <body data-theme="dark">
 
+<!-- ═══ REORDER CONFIRM POPUP — jab customer dobara QR scan kare aur order pehle se active ho ═══ -->
+<div id="reorder-popup-modal" style="display:none;position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
+  <div style="background:linear-gradient(135deg,#1c1730,#241a3d);border:1px solid rgba(168,85,247,0.35);border-radius:20px;width:100%;max-width:380px;padding:26px 22px;box-shadow:0 24px 70px rgba(0,0,0,0.6);text-align:center;">
+    <div style="font-size:38px;margin-bottom:10px;">🍽️</div>
+    <div style="font-family:var(--font-circular,inherit);font-size:17px;font-weight:800;color:#fff;margin-bottom:8px;">Aapka order pehle se chal raha hai!</div>
+    <div id="reorder-popup-sub" style="font-size:13px;color:rgba(255,255,255,0.65);line-height:1.6;margin-bottom:22px;">Kya aap is order mein kuch aur dishes add karna chahte hain?</div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="reorderPopupNo()" style="flex:1;padding:13px;border-radius:12px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8);font-size:14px;font-weight:700;cursor:pointer;">No, dekhna hai order</button>
+      <button onclick="reorderPopupYes()" style="flex:1;padding:13px;border-radius:12px;border:none;background:linear-gradient(135deg,#f97316,#ea6d0f);color:#fff;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(249,115,22,0.35);">Yes, add karo</button>
+    </div>
+  </div>
+</div>
+
 <!-- CUSTOMER GATE -->
 <div class="customer-gate" id="customerGate">
   <!-- Ambient background blobs -->
@@ -3451,10 +3464,10 @@ function enterApp() {
         window._lastOrderFbId = saved.fbOrderId || null;
         // Firebase tracking restart karo for live chef time
         if(saved.fbOrderId) startOrderTracking(saved.fbOrderId);
-        showToast(`Welcome back ${name}! 🍽️ Aapka order abhi bhi active hai`);
         setGreetingName(name);
-        // Orders tab pe le jao automatically
-        setTimeout(()=>{ const on=document.querySelector('.nav-item[onclick*="orders"]'); if(on) on.click(); }, 800);
+        // ✅ Naya flow: seedha Orders tab pe le jaane ke bajaye pehle pooch lo
+        // ki customer order mein aur dishes add karna chahta hai ya sirf status dekhna hai
+        showReorderPopup(saved);
         return;
       }
     }
@@ -3464,6 +3477,49 @@ function enterApp() {
   setGreetingName(name);
 }
 window.enterApp = enterApp;
+
+/* ══ REORDER POPUP — customer ne QR dobara scan kiya, active order already hai ══ */
+window._pendingReorderSavedOrder = null; // us active order ka localStorage snapshot jisme merge karna hai
+
+function showReorderPopup(saved){
+  window._pendingReorderSavedOrder = saved;
+  const sub = document.getElementById('reorder-popup-sub');
+  if(sub){
+    const itemCount = (saved.order?.items||[]).length;
+    sub.textContent = `Aapka order (${itemCount} items) kitchen mein hai. Kya aap kuch aur dishes add karna chahte hain?`;
+  }
+  const modal = document.getElementById('reorder-popup-modal');
+  if(modal){ modal.style.display='flex'; }
+}
+window.showReorderPopup = showReorderPopup;
+
+function reorderPopupNo(){
+  const modal = document.getElementById('reorder-popup-modal');
+  if(modal) modal.style.display='none';
+  window._isReorderMode = false;
+  window._reorderTargetOrderId = null;
+  showToast('👍 Theek hai — aapka order status dikha rahe hain');
+  // Purana behavior: Orders tab pe le jao status dikhane ke liye
+  setTimeout(()=>{ const on=document.querySelector('.nav-item[onclick*="orders"]'); if(on) on.click(); }, 400);
+}
+window.reorderPopupNo = reorderPopupNo;
+
+function reorderPopupYes(){
+  const modal = document.getElementById('reorder-popup-modal');
+  if(modal) modal.style.display='none';
+  const saved = window._pendingReorderSavedOrder;
+  // ✅ Reorder mode ON — placeOrder() ab is existing Firestore order doc mein hi items merge karega,
+  // naya alag bill nahi banega
+  window._isReorderMode = true;
+  window._reorderTargetOrderId = (saved && saved.fbOrderId) || window._lastOrderFbId || null;
+  if(!window._reorderTargetOrderId){
+    showToast('⚠️ Purana order nahi mila, naya order place karo');
+    window._isReorderMode = false;
+  } else {
+    showToast('🍽️ Menu se dish chuno aur "Place Order" dabao — pehle wale order mein hi add ho jayega!');
+  }
+}
+window.reorderPopupYes = reorderPopupYes;
 
 /* ══ ORDER RECOVERY — Purane QR se bhi order check karo ══ */
 function tryRecoverOrder() {
@@ -5040,6 +5096,98 @@ function sendComplaint(){
 window.sendComplaint=sendComplaint;
 
 /* ══ PLACE ORDER ══ */
+/* ══ REORDER MERGE — existing active order mein naye dishes add karo, alag bill nahi banega ══ */
+async function placeReorderMerge(){
+  if(!cartItems.length){ showToast('Cart khali hai — pehle dishes add karo 🍽️'); return; }
+  const notes=document.getElementById('orderNotes')?.value.trim()||'';
+  const btn=document.getElementById('placeOrderBtn');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Order update ho raha hai...';}
+  const targetId = window._reorderTargetOrderId;
+  let mergedOrderData = null;
+  let savedOk = false;
+  try{
+    if(window.__db){
+      const { doc, getDoc, updateDoc, setDoc, serverTimestamp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      const orderRef = doc(window.__db,'orders', targetId);
+      const existingSnap = await getDoc(orderRef);
+      const existingData = existingSnap.exists() ? existingSnap.data() : {};
+      const existingItems = Array.isArray(existingData.items) ? existingData.items.slice() : [];
+      const newItems = cartItems.map(i=>({id:i.id,name:i.name,price:i.price,priceNum:i.priceNum,qty:i.qty,spiceLevel:i.spice,customInstruction:i.customNote||''}));
+      newItems.forEach(ni=>{
+        const match = existingItems.find(ei=> ei.id===ni.id && (ei.spiceLevel||'')===(ni.spiceLevel||'') && (ei.customInstruction||'')===(ni.customInstruction||''));
+        if(match){ match.qty = (parseInt(match.qty)||0) + (parseInt(ni.qty)||0); }
+        else existingItems.push(ni);
+      });
+      const mergedSub   = existingItems.reduce((s,it)=> s + ((parseFloat(it.priceNum)||parseFloat(it.price)||0) * (parseInt(it.qty)||1)), 0);
+      const mergedDisc  = getDiscountAmount(mergedSub);
+      const mergedTax   = Math.round(mergedSub*0.05);
+      const mergedTotal = mergedSub - mergedDisc + mergedTax;
+      const prevReorderCount = parseInt(existingData.reorderCount)||0;
+      const mergedNotes = notes ? (existingData.notes ? (existingData.notes+' | '+notes) : notes) : (existingData.notes||'');
+      const wasReadyOrServed = existingData.status==='ready' || existingData.status==='served';
+      await updateDoc(orderRef, {
+        items: existingItems,
+        subtotal: mergedSub,
+        discountAmount: mergedDisc,
+        taxes: mergedTax,
+        totalAmount: mergedTotal,
+        notes: mergedNotes,
+        status: wasReadyOrServed ? 'pending' : (existingData.status || 'pending'), // ✅ naye dishes aaye to dobara "pending" — chef ko pata chale
+        reorderCount: prevReorderCount + 1,      // ✅ billing panel isi se reorder detect karta hai
+        lastReorderAt: serverTimestamp()
+      });
+      savedOk = true;
+      mergedOrderData = {...existingData, items:existingItems, subtotal:mergedSub, discountAmount:mergedDisc, taxes:mergedTax, totalAmount:mergedTotal, notes:mergedNotes};
+
+      // Table doc bhi sync karo — billing panel turant updated dishes dekhe
+      if(tableNumber && !isNaN(parseInt(tableNumber))){
+        try{
+          const ridPrefix = window._sip_restaurantId ? (window._sip_restaurantId + '_') : '';
+          const tableRef = doc(window.__db, 'tables', ridPrefix + String(parseInt(tableNumber)));
+          await setDoc(tableRef, {
+            status:'occupied',
+            currentOrder: existingItems,
+            lastOrderId: targetId,
+            restaurantId: window._sip_restaurantId || '',
+            tableNumber: String(parseInt(tableNumber))
+          }, { merge:true });
+        }catch(te){ console.warn('Table update error (reorder):', te); }
+      }
+    }
+  }catch(e){ console.error('Reorder merge error:', e); }
+
+  // Hide "food ready" banner agar dikh raha tha — naye dishes abhi cook hone baaki hain
+  const rdEl=document.getElementById('orderReadyBanner');
+  if(rdEl) rdEl.style.display='none';
+
+  // localStorage snapshot update karo taaki agla rescan bhi sahi dikhe
+  try{
+    const raw = localStorage.getItem('siplora_active_order');
+    const savedObj = raw ? JSON.parse(raw) : { placedAt:Date.now(), totalSecs:15*60 };
+    savedObj.order = mergedOrderData ? {...savedObj.order, ...mergedOrderData} : savedObj.order;
+    savedObj.fbOrderId = targetId;
+    savedObj.restaurantId = window._sip_restaurantId || '';
+    localStorage.setItem('siplora_active_order', JSON.stringify(savedObj));
+  }catch(e){ console.warn('LocalStorage save error (reorder):', e); }
+
+  window._lastPlacedOrder = mergedOrderData || window._lastPlacedOrder;
+  window._lastOrderFbId = targetId;
+  if(targetId) startOrderTracking(targetId);
+
+  closeCartPanel();
+  document.body.style.overflow='';
+  const orderIdForToast = (mergedOrderData && mergedOrderData.orderId) || targetId;
+  showOrderSuccess(orderIdForToast, savedOk);
+  cartItems=[];
+  updateCartCount();
+  renderMenu(activeCategory);
+
+  // Reset reorder flags — agla scan phir se popup dikhayega
+  window._isReorderMode = false;
+  window._reorderTargetOrderId = null;
+}
+window.placeReorderMerge = placeReorderMerge;
+
 async function placeOrder() {
   if(!customerName||!customerPhone){
     showToast('Please fill in your details first 👤');
@@ -5047,6 +5195,11 @@ async function placeOrder() {
     document.getElementById('customerGate').style.display='flex';
     document.getElementById('customerGate').classList.remove('hide');
     return;
+  }
+  // ✅ REORDER FLOW: customer ne pehle se active order mein "Yes, add karo" chuna tha —
+  // isliye naya alag order banane ke bajaye, usi purane order mein dishes merge karo.
+  if(window._isReorderMode && window._reorderTargetOrderId){
+    return await placeReorderMerge();
   }
   const notes=document.getElementById('orderNotes')?.value.trim()||'';
   const btn=document.getElementById('placeOrderBtn');
@@ -5059,7 +5212,8 @@ async function placeOrder() {
     items:cartItems.map(i=>({id:i.id,name:i.name,price:i.price,priceNum:i.priceNum,qty:i.qty,spiceLevel:i.spice,customInstruction:i.customNote||''})),
     subtotal:sub,deliveryFee:0,taxes:tax,totalAmount:tot,
     status:'pending',timestamp:new Date().toISOString(),source:'qr_menu',
-    restaurantId: window._sip_restaurantId || ''
+    restaurantId: window._sip_restaurantId || '',
+    reorderCount:0
   };
   let savedOk=false;
   try {
