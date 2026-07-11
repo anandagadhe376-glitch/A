@@ -4966,7 +4966,7 @@ function renderCartPanel() {
     content.innerHTML=`<div class="cart-empty-state"><div class="cart-empty-icon">🛒</div><div class="cart-empty-text">Cart is empty</div><div class="cart-empty-sub">Add something delicious</div></div>`;
     return;
   }
-  const sub=cartTotal(), tax=Math.round(sub*0.05), tot=sub+tax;
+  const sub=cartTotal(), tax=0, tot=sub+tax;
   const custStrip=customerName?`<div class="customer-info-strip">
     <div class="customer-info-strip-avatar">${customerName.charAt(0).toUpperCase()}</div>
     <div><div class="customer-info-name">${customerName}</div><div class="customer-info-phone">${customerPhone}${tableNumber?' · Table '+tableNumber:''}</div></div>
@@ -5053,8 +5053,7 @@ function renderCartPanel() {
     <div class="order-summary-header">📋 Bill Summary</div>
     <div class="summary-row"><span>Items Total</span><span>₹${sub}</span></div>
     ${appliedCoupon?`<div class="summary-row" style="color:#22c55e"><span>🎟️ Coupon (${appliedCoupon.code})</span><span>-₹${getDiscountAmount(sub)}</span></div>`:''}
-    <div class="summary-row"><span>GST & Taxes (5%)</span><span>₹${Math.round(sub*0.05)}</span></div>
-    <div class="summary-row total"><span>Total</span><span class="summary-total-val">₹${sub - getDiscountAmount(sub) + Math.round(sub*0.05)}</span></div>
+    <div class="summary-row total"><span>Total</span><span class="summary-total-val">₹${sub - getDiscountAmount(sub)}</span></div>
   </div>
   <div class="order-form-section">
     <div class="order-form-title">📢 Complaint / Special Request</div>
@@ -5066,7 +5065,7 @@ function renderCartPanel() {
       </div>
     </div>
     <button class="place-order-btn" id="placeOrderBtn" onclick="placeOrder()">
-      🚀 Place Order — ₹${sub - getDiscountAmount(sub) + Math.round(sub*0.05)}
+      🚀 Place Order — ₹${sub - getDiscountAmount(sub)}
     </button>
   </div>`;
   // Restore coupon selection after re-render
@@ -5120,7 +5119,7 @@ async function placeReorderMerge(){
       });
       const mergedSub   = existingItems.reduce((s,it)=> s + ((parseFloat(it.priceNum)||parseFloat(it.price)||0) * (parseInt(it.qty)||1)), 0);
       const mergedDisc  = getDiscountAmount(mergedSub);
-      const mergedTax   = Math.round(mergedSub*0.05);
+      const mergedTax   = 0;
       const mergedTotal = mergedSub - mergedDisc + mergedTax;
       const prevReorderCount = parseInt(existingData.reorderCount)||0;
       const mergedNotes = notes ? (existingData.notes ? (existingData.notes+' | '+notes) : notes) : (existingData.notes||'');
@@ -5204,7 +5203,7 @@ async function placeOrder() {
   const notes=document.getElementById('orderNotes')?.value.trim()||'';
   const btn=document.getElementById('placeOrderBtn');
   if(btn){btn.disabled=true;btn.textContent='⏳ Placing your order...';}
-  const sub=cartTotal(), disc=getDiscountAmount(sub), tax=Math.round(sub*0.05), tot=sub-disc+tax;
+  const sub=cartTotal(), disc=getDiscountAmount(sub), tax=0, tot=sub-disc+tax;
   const orderId='Siplora-'+Math.random().toString(36).substr(2,6).toUpperCase();
   const orderData={
     orderId,customerName,customerPhone,tableNumber:tableNumber||'walk-in',notes,
@@ -5989,8 +5988,8 @@ function renderOrdersPanel() {
   const order = window._lastPlacedOrder;
   const sub  = order.subtotal || 0;
   const disc = order.discountAmount || 0;
-  const tax  = order.taxes || 0;
-  const tot  = order.totalAmount || (sub - disc + tax);
+  const tax  = 0;
+  const tot  = (order.totalAmount!=null ? order.totalAmount : (sub - disc + tax)) - (order.taxes || 0);
 
   // Calculate initial display time from chef-assigned or remaining countdown
   const _initRemSecs = (window._orderCountdownRem && window._orderCountdownRem > 0)
@@ -6068,7 +6067,6 @@ function renderOrdersPanel() {
       <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:12px;">📋 Bill Summary</div>
       <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:var(--text2);"><span>Items Total</span><span>₹${sub}</span></div>
       ${disc>0 ? `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:#22c55e;"><span>🎟️ Coupon (${order.couponCode})</span><span>-₹${disc}</span></div>` : ''}
-      <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;color:var(--text2);"><span>GST & Taxes (5%)</span><span>₹${tax}</span></div>
       <div style="display:flex;justify-content:space-between;padding:10px 0 0;font-size:16px;font-weight:900;color:#EAB308;"><span>Total Amount</span><span>₹${tot}</span></div>
     </div>
 
