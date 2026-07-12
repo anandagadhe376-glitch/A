@@ -3797,6 +3797,9 @@ let appliedCoupon = null;
 function renderTodaySpecials() {
   const track = document.getElementById('todaySpecialTrack');
   if(!track) return;
+  // ✅ FIX: Firebase se aaye live "Today's Special" cards (.fb-today-special-card) ko
+  // preserve karo — pehle unhe save karo, phir wapas insert karo (jaise renderOffers/renderChefPicks karte hain)
+  const fbCards = Array.from(track.querySelectorAll('.fb-today-special-card')).map(el=>el.outerHTML);
   track.innerHTML = APP_DATA.todaySpecials.map(s => `
     <div class="special-card" onclick="quickAddByName('${s.name.replace(/'/g,"\'")}','${s.image}','${s.price}')">
       <img class="special-card-img" src="${s.image}" alt="${s.name}" loading="lazy" onerror="this.style.background='#1a1a2e'" />
@@ -3809,6 +3812,7 @@ function renderTodaySpecials() {
         </div>
       </div>
     </div>`).join('');
+  if(fbCards.length>0) track.insertAdjacentHTML('afterbegin', fbCards.join(''));
 }
 
 /* ══ COUPONS — Firebase Only ══ */
