@@ -3362,14 +3362,9 @@ const IMG = {
 window.APP_DATA = {
   offers:[],
   chefPicks:[],
-  // Default coupons shown until Firebase loads real ones
-  coupons:[
-    { id:'c1', code:'NOVA1ST',   discount:100, type:'flat',    desc:'Free Delivery on First Order', minOrder:299, color:'green',  emoji:'🚚', active:true },
-    { id:'c2', code:'WELCOME20', discount:20,  type:'percent', desc:'20% off on your first order',  minOrder:199, color:'purple', emoji:'🎉', active:true },
-    { id:'c3', code:'SAVE50',    discount:50,  type:'flat',    desc:'Rs.50 off on orders above Rs.299', minOrder:299, color:'golden', emoji:'💰', active:true },
-    { id:'c4', code:'FEAST15',   discount:15,  type:'percent', desc:'15% off on orders above Rs.499', minOrder:499, color:'teal',   emoji:'🍽️', active:true },
-    { id:'c5', code:'PARTY30',   discount:30,  type:'percent', desc:'30% off on orders above Rs.699', minOrder:699, color:'red',    emoji:'🎊', active:true },
-  ],
+  // ❌ Hardcoded default coupons hata diye — ye har restaurant pe leak ho rahe the.
+  //    Ab sirf Firebase se is restaurant (rid) ke apne coupons hi load honge.
+  coupons:[],
   todaySpecials:[],
   categories:[]
 };
