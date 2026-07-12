@@ -3267,15 +3267,9 @@ window.__loadMenu = async function() {
       ridQuery = _col2(db, 'coupons');
     }
     _ons2(ridQuery, snap => {
-      if(snap.size === 0 && rid) {
-        // ✅ Fallback: restaurantId se kuch nahi mila, seedha collection try karo
-        console.warn('[Siplora] restaurantId filter se 0 coupons — fallback: all coupons check kar rahe hain');
-        _ons2(_col2(db, 'coupons'), fallbackSnap => {
-          processCouponSnap(fallbackSnap);
-        });
-      } else {
-        processCouponSnap(snap);
-      }
+      // ❌ Fallback hata diya gaya — agar is restaurant (rid) ka koi coupon nahi milta,
+      // toh koi coupon show nahi hoga. Kisi doosre restaurant ke coupons yahan kabhi nahi dikhenge.
+      processCouponSnap(snap);
     });
   } catch(e) { console.error('[Siplora] Coupons load error:', e); }
 
