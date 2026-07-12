@@ -2981,6 +2981,22 @@ window._sipCol = function(colName) {
   return query(collection(db, colName), where('restaurantId', '==', '__no_restaurant__'));
 };
 
+/* ══ QR CODE SCAN TRACKING — billing panel ke QR Codes page ke liye analytics ══ */
+// Jab bhi koi customer table ka QR scan kar ke ye page kholta hai, ek scan
+// event 'qr_scans' collection me log hota hai. Billing panel isse live
+// scan-count aur last-scan-time dikhata hai har table ke QR card pe.
+async function logQrScan(tableNum, restaurantId) {
+  try {
+    if (!tableNum || !window.__db || !window.__addDoc || !window.__col || !window.__serverTimestamp) return;
+    await window.__addDoc(window.__col(window.__db, 'qr_scans'), {
+      tableNumber: String(tableNum),
+      restaurantId: restaurantId || window._sip_restaurantId || '',
+      scannedAt: window.__serverTimestamp(),
+      userAgent: (navigator.userAgent || '').slice(0, 140)
+    });
+  } catch (e) { console.warn('[QR Scan Tracking] log failed:', e); }
+}
+
 // ── Load ACTIVE ads from Firebase in real-time ──
 function startAdsListener() {
   try {
@@ -3402,6 +3418,8 @@ let isSearchOpen    = false;
     // Update gate desc
     const desc = document.querySelector('.gate-desc');
     if (desc) desc.textContent = 'Table ' + tableNumber + ' — enter your name & phone to enjoy the menu!';
+    // ✅ QR scan analytics: sirf tab log karo jab table QR se aaya ho
+    setTimeout(function(){ logQrScan(tableNumber, restaurantId); }, 800);
   } else {
     if (tableBadge) tableBadge.style.display = 'none';
     if (walkinBadge) walkinBadge.style.display = 'flex';
@@ -6053,8 +6071,8 @@ function renderOrdersPanel() {
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
         Your Items (${order.items.length})
       </div>
-      ${order.items.map(it=>`
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+      ${order.items.map((it,idx)=>`
+        <div id="orderItemRow-${idx}" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);">
           <div style="width:44px;height:44px;border-radius:12px;overflow:hidden;flex-shrink:0;background:var(--glass);">
             ${it.image ? `<img src="${it.image}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'" />` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:20px;">🍽️</div>`}
           </div>
@@ -6063,6 +6081,13 @@ function renderOrdersPanel() {
             <div style="font-size:11px;color:var(--text3);margin-top:2px;">×${it.qty||1}${it.spiceLevel ? ' · '+it.spiceLevel+' spice' : ''}</div>
           </div>
           <div style="font-size:14px;font-weight:800;color:var(--gold);flex-shrink:0;">₹${(it.priceNum||parseInt((it.price||'0').replace(/[^\d]/g,'')))*(it.qty||1)}</div>
+          <button onclick="cancelOrderItem(${idx})" title="Ye dish cancel karo" style="
+            flex-shrink:0;width:28px;height:28px;border-radius:9px;border:1.5px solid rgba(239,68,68,0.3);
+            background:rgba(239,68,68,0.08);color:#ef4444;cursor:pointer;display:flex;align-items:center;justify-content:center;
+            transition:all 0.2s;
+          " onmouseenter="this.style.background='rgba(239,68,68,0.18)'" onmouseleave="this.style.background='rgba(239,68,68,0.08)'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>`).join('')}
     </div>
 
@@ -6146,6 +6171,67 @@ async function cancelActiveOrder() {
   setTimeout(() => renderOrdersPanel(), 300);
 }
 window.cancelActiveOrder = cancelActiveOrder;
+
+/* ══ CANCEL INDIVIDUAL DISH FROM ORDER ══ */
+async function cancelOrderItem(idx) {
+  const order = window._lastPlacedOrder;
+  if(!order || !order.items || !order.items[idx]) return;
+
+  const item = order.items[idx];
+
+  // Agar ye order ka aakhri (sirf ek hi) dish hai, to poora order hi cancel karo
+  if(order.items.length <= 1){
+    showToast('Ye order ka aakhri dish hai — poora order cancel ho raha hai...');
+    return cancelActiveOrder();
+  }
+
+  const confirmed = window.confirm(`"${item.name}" cancel karna chahte ho?\n\nSirf tab cancel karo jab chef ne cooking shuru na ki ho.`);
+  if(!confirmed) return;
+
+  const rowEl = document.getElementById('orderItemRow-'+idx);
+  if(rowEl) rowEl.style.opacity = '0.4';
+
+  // Item ko order se hata do aur naya total nikalo
+  const removedItem = order.items.splice(idx, 1)[0];
+  const newSubtotal = order.items.reduce((s,it)=> s + (it.priceNum||parseInt((it.price||'0').replace(/[^\d]/g,'')))*(it.qty||1), 0);
+  const discAmt = order.discountAmount || 0;
+  const taxes = order.taxes || 0;
+  order.subtotal = newSubtotal;
+  order.totalAmount = Math.max(0, newSubtotal - discAmt) + taxes;
+
+  const cancelledEntry = {
+    name: removedItem.name,
+    qty: removedItem.qty || 1,
+    price: removedItem.priceNum || parseInt((removedItem.price||'0').replace(/[^\d]/g,'')),
+    cancelledAt: new Date().toISOString(),
+    cancelledBy: 'customer'
+  };
+  order.cancelledItems = Array.isArray(order.cancelledItems) ? order.cancelledItems : [];
+  order.cancelledItems.push(cancelledEntry);
+
+  // Firebase mein order document update karo — items + naya total + cancelledItems history
+  let fbUpdated = false;
+  try {
+    if(window.__db && window._lastOrderFbId){
+      const { doc, updateDoc, arrayUnion } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+      await updateDoc(doc(window.__db,'orders',window._lastOrderFbId), {
+        items: order.items,
+        subtotal: order.subtotal,
+        totalAmount: order.totalAmount,
+        cancelledItems: arrayUnion(cancelledEntry)
+      });
+      fbUpdated = true;
+    }
+  } catch(e){ console.warn('Firebase item-cancel error:', e); }
+
+  // LocalStorage active order cache refresh karo
+  try{ localStorage.setItem('siplora_active_order', JSON.stringify(order)); }catch(e){}
+
+  showToast(fbUpdated ? `❌ "${item.name}" cancel ho gaya!` : `❌ "${item.name}" cancel ho gaya (offline mode)`);
+
+  renderOrdersPanel();
+}
+window.cancelOrderItem = cancelOrderItem;
 
 function startOrdersPanelTimer() {
   if(window._ordersPanelTimer) clearInterval(window._ordersPanelTimer);
