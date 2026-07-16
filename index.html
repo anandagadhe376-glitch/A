@@ -1027,7 +1027,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 #animGreetName{text-shadow:none!important;}
 </style>
 </head>
-<body data-theme="dark">
+<body data-theme="coral">
 
 <!-- ═══ REORDER CONFIRM POPUP — jab customer dobara QR scan kare aur order pehle se active ho ═══ -->
 <div id="reorder-popup-modal" style="display:none;position:fixed;inset:0;z-index:99997;background:rgba(0,0,0,0.55);backdrop-filter:blur(10px);align-items:center;justify-content:center;padding:20px;box-sizing:border-box;">
@@ -6494,7 +6494,7 @@ const THEMES = ['dark','foode','cream','coral'];
 const FONTS  = ['poppins','inter','montserrat'];
 
 function applyTheme(theme){
-  if(!THEMES.includes(theme)) theme='dark';
+  if(!THEMES.includes(theme)) theme='coral';
   document.body.setAttribute('data-theme', theme);
   try{ localStorage.setItem('nova_theme', theme); }catch(e){}
   THEMES.forEach(t=>{
@@ -6504,7 +6504,7 @@ function applyTheme(theme){
 }
 
 function applyFont(font){
-  if(!FONTS.includes(font)) font='poppins';
+  if(!FONTS.includes(font)) font='inter';
   document.body.setAttribute('data-font', font);
   try{ localStorage.setItem('nova_font', font); }catch(e){}
   FONTS.forEach(f=>{
@@ -6565,9 +6565,9 @@ function closeThemePanel(e){
 
 // Load saved theme + font on start
 (function(){
-  let savedTheme='dark', savedFont='poppins';
-  try{ savedTheme=localStorage.getItem('nova_theme')||'dark'; }catch(e){}
-  try{ savedFont =localStorage.getItem('nova_font') ||'poppins'; }catch(e){}
+  let savedTheme='coral', savedFont='inter';
+  try{ savedTheme=localStorage.getItem('nova_theme')||'coral'; }catch(e){}
+  try{ savedFont =localStorage.getItem('nova_font') ||'inter'; }catch(e){}
   applyTheme(savedTheme);
   applyFont(savedFont);
 })();
