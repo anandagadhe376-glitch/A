@@ -3268,12 +3268,19 @@ window.__loadMenu = async function() {
     });
   } catch(e) { console.error('[Siplora] Coupons load error:', e); }
 
-  // ── Load custom categories from Firebase (saved from billing.html menuCategories) ──
+  // ── Load custom categories (incl. images) from Firebase ──
+  // ✅ FIX: billing.js (Menu Manager panel) actually saves categories to the
+  //         document  app_data/menu_categories_<restaurantId>  (field: "data").
+  //         This page used to listen to a completely different/unused
+  //         collection ("menuCategories"), so category images added from the
+  //         billing panel never showed up here. Now we listen to the correct doc.
   try {
-    onSnapshot(window._sipCol('menuCategories'), catSnap => {
-      if(catSnap.empty) { renderMenu('all'); renderPills(); return; }
-      const fbCats = [];
-      catSnap.forEach(d => fbCats.push(d.data()));
+    const { doc: _catDoc, onSnapshot: _catOnSnapshot } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+    const rid = window._sip_restaurantId || 'norestaurant';
+    const catDocRef = _catDoc(db, 'app_data', 'menu_categories_' + rid);
+    _catOnSnapshot(catDocRef, docSnap => {
+      if(!docSnap.exists() || !Array.isArray(docSnap.data().data)) { renderMenu('all'); renderPills(); return; }
+      const fbCats = docSnap.data().data;
       // Merge Firebase categories into APP_DATA.categories
       // Keep existing hardcoded categories, add Firebase ones on top
       fbCats.forEach(fc => {
@@ -3297,7 +3304,7 @@ window.__loadMenu = async function() {
           });
         }
       });
-      console.log('☁ Categories loaded from Firebase:', fbCats.length);
+      console.log('☁ Categories loaded from Firebase (app_data/menu_categories_' + rid + '):', fbCats.length);
       renderPills();
       renderMenu('all');
     });
