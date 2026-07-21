@@ -3140,8 +3140,8 @@ window.__loadMenu = async function() {
         const isChefPick = dish.isChefPick || dish.chefPicks;
         const isHot = dish.isHot || dish.hot;
         // All dishes also appear in their category section
-        const catKey = (dish.cat || 'Other').toLowerCase().replace(/\s+/g,'-').replace(/[🔥👨‍🍳🏷️]/g,'').trim() || 'other';
-        const catName = dish.cat || 'Other';
+        const catKey = (dish.cat || 'Other').replace(/[🔥👨‍🍳🏷️]/g,'').trim().toLowerCase().replace(/\s+/g,'-') || 'other';
+        const catName = (dish.cat || 'Other').trim();
         if(!catMap[catKey]) catMap[catKey] = {id:catKey, name:catName, emoji: isHotDeal?'🔥': isChefPick?'👨‍🍳':'🍽️', order:99, dishes:[]};
         const existingInCat = catMap[catKey].dishes.find(d2=>d2.id===dish._fbId||(d2.name===dish.name));
         if(!existingInCat){
@@ -3162,8 +3162,9 @@ window.__loadMenu = async function() {
       });
 
       // Merge billing categories with existing APP_DATA.categories
+      const _norm = s => (s||'').toString().trim().toLowerCase().replace(/\s+/g,' ');
       Object.values(catMap).forEach(newCat => {
-        const existing = window.APP_DATA.categories.find(c => c.id === newCat.id || c.name.toLowerCase() === newCat.name.toLowerCase());
+        const existing = window.APP_DATA.categories.find(c => c.id === newCat.id || _norm(c.name) === _norm(newCat.name));
         if(existing) {
           newCat.dishes.forEach(nd => {
             if(!existing.dishes.find(ed => ed.id === nd.id)) existing.dishes.push(nd);
@@ -3283,20 +3284,21 @@ window.__loadMenu = async function() {
       const fbCats = docSnap.data().data;
       // Merge Firebase categories into APP_DATA.categories
       // Keep existing hardcoded categories, add Firebase ones on top
+      const _normFc = s => (s||'').toString().trim().toLowerCase().replace(/\s+/g,' ');
       fbCats.forEach(fc => {
-        // Check if this category already exists in APP_DATA
+        const fcName = (fc.name||'').trim();
+        // Check if this category already exists in APP_DATA (id match OR trimmed/space-normalized name match)
         const existIdx = window.APP_DATA.categories.findIndex(c =>
-          c.id === fc.id || c.name.toLowerCase() === (fc.name||'').toLowerCase()
+          c.id === fc.id || _normFc(c.name) === _normFc(fcName)
         );
         if(existIdx >= 0){
-          // Update name/image from Firebase
-          window.APP_DATA.categories[existIdx].name = fc.name;
+          // Update image from Firebase — keep the existing (dish-derived) name/id so pills/menu keep working
           if(fc.image) window.APP_DATA.categories[existIdx].image = fc.image;
         } else {
           // New category from billing panel — add with empty dishes array
           window.APP_DATA.categories.push({
             id: fc.id,
-            name: fc.name,
+            name: fcName,
             emoji: '🍽️',
             image: fc.image || '',
             order: 50,
