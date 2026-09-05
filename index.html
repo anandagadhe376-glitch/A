@@ -2298,9 +2298,6 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
     </button>
     <div class="fullsearch-title">Search</div>
-    <button class="fullsearch-filter-btn" onclick="openFilterPanel()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-    </button>
   </div>
   <div class="fullsearch-input-wrap">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--purple)"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
@@ -2321,55 +2318,6 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
     <div id="fullSearchResults" style="display:none;"></div>
   </div>
 </div>
-
-<!-- FILTER PANEL -->
-<div class="filter-overlay" id="filterOverlay" onclick="closeFilterPanel(event)">
-  <div class="filter-panel" id="filterPanel">
-    <div class="filter-header">
-      <div class="filter-title">Filters 🔍</div>
-      <button class="filter-close" onclick="closeFilterPanel()">✕</button>
-    </div>
-    <div class="filter-body">
-      <div class="filter-section-label">⚡ SORT BY</div>
-      <div class="filter-chips" id="sortChips">
-        <div class="filter-chip selected" data-val="relevance" onclick="selectSort(this)">Relevance</div>
-        <div class="filter-chip" data-val="rating" onclick="selectSort(this)">Rating ⭐</div>
-        <div class="filter-chip" data-val="price_low" onclick="selectSort(this)">Price: Low→High</div>
-        <div class="filter-chip" data-val="price_high" onclick="selectSort(this)">Price: High→Low</div>
-      </div>
-      <div class="filter-section-label" style="margin-top:20px;">🌿 DIETARY</div>
-      <div class="filter-chips" id="dietChips">
-        <div class="filter-chip" data-val="veg" onclick="toggleDiet(this)">Veg Only 🌿</div>
-        <div class="filter-chip" data-val="nonveg" onclick="toggleDiet(this)">Non-Veg 🍗</div>
-        <div class="filter-chip" data-val="vegan" onclick="toggleDiet(this)">Vegan 🥦</div>
-        <div class="filter-chip" data-val="gluten" onclick="toggleDiet(this)">Gluten Free</div>
-      </div>
-      <div class="filter-section-label" style="margin-top:20px;">💰 PRICE RANGE</div>
-      <div style="padding:0 4px;">
-        <input type="range" class="filter-range" id="priceRange" min="50" max="2000" value="1000" oninput="updatePriceLabel(this.value)" />
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:6px;">
-          <span>₹50</span><span id="priceRangeLabel" style="color:var(--purple);font-weight:700;">₹1000</span><span>₹2000</span>
-        </div>
-      </div>
-      <div class="filter-section-label" style="margin-top:20px;">⏱ DELIVERY TIME</div>
-      <div class="filter-chips" id="timeChips">
-        <div class="filter-chip" data-val="20" onclick="toggleTime(this)">Under 20 min</div>
-        <div class="filter-chip" data-val="40" onclick="toggleTime(this)">20-40 min</div>
-        <div class="filter-chip" data-val="60" onclick="toggleTime(this)">40-60 min</div>
-      </div>
-      <div class="filter-section-label" style="margin-top:20px;">⭐ MIN RATING</div>
-      <div class="filter-stars" id="filterStars">
-        <span class="fstar" data-val="1" onclick="setMinRating(1)">☆</span>
-        <span class="fstar" data-val="2" onclick="setMinRating(2)">☆</span>
-        <span class="fstar" data-val="3" onclick="setMinRating(3)">☆</span>
-        <span class="fstar" data-val="4" onclick="setMinRating(4)">☆</span>
-        <span class="fstar" data-val="5" onclick="setMinRating(5)">☆</span>
-      </div>
-      <button class="filter-apply-btn" onclick="applyFilters()">Apply Filters ✨</button>
-    </div>
-  </div>
-</div>
-
 
 
 <!-- ══ COUPON SWIPE STRIP (replaces static promo banner) ══ -->
@@ -4125,7 +4073,7 @@ function renderPills() {
   document.getElementById('catPills').innerHTML = all.map((c,i) => {
     const topEl = i===0
       ? `<div style="width:36px;height:36px;border-radius:10px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`
-      : `<img src="${getCatImage(c.id,c.name)}" alt="${c.name}" loading="lazy" style="width:36px;height:36px;border-radius:10px;object-fit:cover;display:block;" />`;
+      : `<img src="${getCatImage(c.id,c.name)}" alt="${c.name}" loading="lazy" style="width:36px;height:36px;object-fit:contain;display:block;background:transparent;" />`;
     return `<div class="pill ${i===0?'active':''}" onclick="filterCat(this,'${c.id}')">${topEl}<span>${c.name}</span></div>`;
   }).join('');
 }
@@ -4179,25 +4127,25 @@ function renderMenu(filter='all') {
         ${cat.name}
       </div>
       <div class="cat-filter-chips" id="catf-${safeCatId}">
-        <div class="cat-filter-chip" data-type="veg" onclick="catDishFilter('${safeCatId}','veg',this)">🌿 Veg</div>
-        <div class="cat-filter-chip" data-type="nonveg" onclick="catDishFilter('${safeCatId}','nonveg',this)">🍗 Non-Veg</div>
-        <div class="cat-filter-chip" data-type="under100" onclick="catDishFilter('${safeCatId}','under100',this)">💰 Under ₹100</div>
-        <div class="cat-filter-chip" data-type="under160" onclick="catDishFilter('${safeCatId}','under160',this)">💰 Under ₹160</div>
-        <div class="cat-filter-chip" data-type="under200" onclick="catDishFilter('${safeCatId}','under200',this)">💵 Under ₹200</div>
-        <div class="cat-filter-chip" data-type="under250" onclick="catDishFilter('${safeCatId}','under250',this)">💵 Under ₹250</div>
-        <div class="cat-filter-chip" data-type="under300" onclick="catDishFilter('${safeCatId}','under300',this)">💵 Under ₹300</div>
-        <div class="cat-filter-chip" data-type="under350" onclick="catDishFilter('${safeCatId}','under350',this)">💵 Under ₹350</div>
-        <div class="cat-filter-chip" data-type="offer" onclick="catDishFilter('${safeCatId}','offer',this)">🔥 On Offer</div>
-        <div class="cat-filter-chip" data-type="bestseller" onclick="catDishFilter('${safeCatId}','bestseller',this)">🏆 Bestseller</div>
-        <div class="cat-filter-chip" data-type="rating4plus" onclick="catDishFilter('${safeCatId}','rating4plus',this)">⭐ 4+ Rating</div>
-        <div class="cat-filter-chip" data-type="fivestar" onclick="catDishFilter('${safeCatId}','fivestar',this)">🌟 5 Star</div>
-        <div class="cat-filter-chip" data-type="premium" onclick="catDishFilter('${safeCatId}','premium',this)">💎 Premium ₹300+</div>
-        <div class="cat-filter-chip" data-type="budget" onclick="catDishFilter('${safeCatId}','budget',this)">🪙 Budget Pick</div>
-        <div class="cat-filter-chip" data-type="trending" onclick="catDishFilter('${safeCatId}','trending',this)">📈 Trending</div>
-        <div class="cat-filter-chip" data-type="popular" onclick="catDishFilter('${safeCatId}','popular',this)">👍 Popular</div>
-        <div class="cat-filter-chip" data-type="rating" onclick="catDishFilter('${safeCatId}','rating',this)">⭐ Top Rated</div>
-        <div class="cat-filter-chip" data-type="price_low" onclick="catDishFilter('${safeCatId}','price_low',this)">₹ Low→High</div>
-        <div class="cat-filter-chip" data-type="price_high" onclick="catDishFilter('${safeCatId}','price_high',this)">₹ High→Low</div>
+        <div class="cat-filter-chip" data-type="veg" onclick="catDishFilter('${safeCatId}','veg',this)">Veg</div>
+        <div class="cat-filter-chip" data-type="nonveg" onclick="catDishFilter('${safeCatId}','nonveg',this)">Non-Veg</div>
+        <div class="cat-filter-chip" data-type="under100" onclick="catDishFilter('${safeCatId}','under100',this)">Under ₹100</div>
+        <div class="cat-filter-chip" data-type="under160" onclick="catDishFilter('${safeCatId}','under160',this)">Under ₹160</div>
+        <div class="cat-filter-chip" data-type="under200" onclick="catDishFilter('${safeCatId}','under200',this)">Under ₹200</div>
+        <div class="cat-filter-chip" data-type="under250" onclick="catDishFilter('${safeCatId}','under250',this)">Under ₹250</div>
+        <div class="cat-filter-chip" data-type="under300" onclick="catDishFilter('${safeCatId}','under300',this)">Under ₹300</div>
+        <div class="cat-filter-chip" data-type="under350" onclick="catDishFilter('${safeCatId}','under350',this)">Under ₹350</div>
+        <div class="cat-filter-chip" data-type="offer" onclick="catDishFilter('${safeCatId}','offer',this)">On Offer</div>
+        <div class="cat-filter-chip" data-type="bestseller" onclick="catDishFilter('${safeCatId}','bestseller',this)">Bestseller</div>
+        <div class="cat-filter-chip" data-type="rating4plus" onclick="catDishFilter('${safeCatId}','rating4plus',this)">4+ Rating</div>
+        <div class="cat-filter-chip" data-type="fivestar" onclick="catDishFilter('${safeCatId}','fivestar',this)">5 Star</div>
+        <div class="cat-filter-chip" data-type="premium" onclick="catDishFilter('${safeCatId}','premium',this)">Premium ₹300+</div>
+        <div class="cat-filter-chip" data-type="budget" onclick="catDishFilter('${safeCatId}','budget',this)">Budget Pick</div>
+        <div class="cat-filter-chip" data-type="trending" onclick="catDishFilter('${safeCatId}','trending',this)">Trending</div>
+        <div class="cat-filter-chip" data-type="popular" onclick="catDishFilter('${safeCatId}','popular',this)">Popular</div>
+        <div class="cat-filter-chip" data-type="rating" onclick="catDishFilter('${safeCatId}','rating',this)">Top Rated</div>
+        <div class="cat-filter-chip" data-type="price_low" onclick="catDishFilter('${safeCatId}','price_low',this)">Price Low→High</div>
+        <div class="cat-filter-chip" data-type="price_high" onclick="catDishFilter('${safeCatId}','price_high',this)">Price High→Low</div>
         <div class="cat-filter-chip" data-type="az" onclick="catDishFilter('${safeCatId}','az',this)">A→Z</div>
         <div class="cat-filter-chip" data-type="za" onclick="catDishFilter('${safeCatId}','za',this)">Z→A</div>
       </div>
