@@ -365,8 +365,8 @@ a{text-decoration:none;color:inherit;}
 .offers-track::-webkit-scrollbar{display:none;}
 .offer-card{flex-shrink:0;width:150px;border-radius:10px;background:var(--glass);border:1px solid var(--border);overflow:hidden;position:relative;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
 .offer-card:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 32px rgba(168,85,247,0.2),0 0 0 1px var(--border-glow);}
-.offer-img-wrap{height:110px;overflow:hidden;position:relative;background:#fff;}
-.offer-img-wrap img{width:100%;height:100%;object-fit:contain;}
+.offer-img-wrap{height:110px;overflow:hidden;position:relative;}
+.offer-img-wrap img{width:100%;height:100%;object-fit:cover;}
 .offer-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;z-index:2;box-shadow:0 2px 8px rgba(239,68,68,0.5);}
 .offer-fire{position:absolute;top:8px;right:8px;font-size:16px;z-index:2;filter:drop-shadow(0 0 6px rgba(249,115,22,0.8));animation:fire-wiggle 1.5s ease-in-out infinite;}
 @keyframes fire-wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
@@ -839,7 +839,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.10) 50%,transparent 60%);
   animation:special-shine 3.5s ease-in-out 1s infinite;pointer-events:none;
 }
-.special-card-img{width:152px;height:112px;object-fit:contain;background:#fff;display:block;transition:transform 0.3s;}
+.special-card-img{width:152px;height:112px;object-fit:cover;display:block;transition:transform 0.3s;}
 .special-card:hover .special-card-img{transform:scale(1.05);}
 .special-card-badge{
   position:absolute;top:8px;left:8px;
@@ -3074,7 +3074,7 @@ window.__loadMenu = async function() {
           const liveCardsHtml = hotDeals.map(d=>`
             <div class="offer-card fb-hot-deal-card" onclick="quickAddByName('${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')">
               <div class="offer-img-wrap">
-                ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy" style="width:100%;height:100%;object-fit:contain"/>`:`<div style="width:100%;height:110px;background:linear-gradient(135deg,#1a1a2e,#e74c3c22);display:flex;align-items:center;justify-content:center;font-size:36px">${d.emoji||'🍽️'}</div>`}
+                ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`:`<div style="width:100%;height:110px;background:linear-gradient(135deg,#1a1a2e,#e74c3c22);display:flex;align-items:center;justify-content:center;font-size:36px">${d.emoji||'🍽️'}</div>`}
                 <div class="offer-badge" style="background:linear-gradient(135deg,#ef4444,#f97316)">${d.dealLabel||d.offerText||'Live Deal'}</div>
                 <div class="offer-fire">🔥</div>
               </div>
