@@ -361,10 +361,10 @@ a{text-decoration:none;color:inherit;}
 /* ── OFFERS ── */
 .offers-track{display:flex;gap:12px;overflow-x:auto;padding:0 20px 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
 .offers-track::-webkit-scrollbar{display:none;}
-.offer-card{flex-shrink:0;width:150px;border-radius:8px;background:var(--glass);border:1px solid var(--border);overflow:hidden;position:relative;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
+.offer-card{flex-shrink:0;width:150px;border-radius:10px;background:#FE5102;border:1px solid var(--border);overflow:hidden;position:relative;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;}
 .offer-card:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 32px rgba(168,85,247,0.2),0 0 0 1px var(--border-glow);}
 .offer-img-wrap{height:110px;overflow:hidden;position:relative;}
-.offer-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;z-index:2;box-shadow:0 2px 8px rgba(239,68,68,0.5);}
+.offer-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;z-index:2;box-shadow:0 2px 8px rgba(239,68,68,0.5);}
 .offer-fire{position:absolute;top:8px;right:8px;font-size:16px;z-index:2;filter:drop-shadow(0 0 6px rgba(249,115,22,0.8));animation:fire-wiggle 1.5s ease-in-out infinite;}
 @keyframes fire-wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 .offer-info{padding:10px;}
@@ -809,8 +809,8 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   100%{transform:scale(1);opacity:1;}
 }
 .special-card{
-  flex-shrink:0;width:152px;background:var(--glass);
-  border:1.5px solid rgba(245,158,11,0.3);border-radius:8px;
+  flex-shrink:0;width:152px;background:#FE5102;
+  border:1.5px solid rgba(245,158,11,0.3);border-radius:10px;
   overflow:hidden;cursor:pointer;
   transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.22s;
   position:relative;
@@ -837,7 +837,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   position:absolute;top:8px;left:8px;
   background:linear-gradient(135deg,#F59E0B,#F97316);
   color:#fff;font-size:9px;font-weight:800;padding:3px 8px;
-  border-radius:99px;letter-spacing:0.5px;text-transform:uppercase;
+  border-radius:6px;letter-spacing:0.5px;text-transform:uppercase;
   box-shadow:0 2px 8px rgba(245,158,11,0.5);
   animation:special-badge-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
 }
