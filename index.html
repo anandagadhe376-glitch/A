@@ -1362,7 +1362,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 
 /* Title animation */
 .success-title{
-  font-family:var(--font-sf);font-size:24px;font-weight:900;
+  font-family:var(--font-sf);font-size:17px;font-weight:900;
   letter-spacing:-0.5px;text-align:center;
   background:linear-gradient(135deg,#008000 0%,#008000 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
@@ -1447,21 +1447,21 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 /* Countdown — now fully GREEN */
 .countdown-wrap{
   width:100%;
-  background:#FFF7EE;
-  border:1px solid rgba(249,115,22,0.25);
+  background:radial-gradient(circle at 50% 45%, #6b0000, #4a0000);
+  border:1px solid rgba(0,0,0,0.35);
   border-radius:16px;padding:12px 16px 12px;margin-bottom:18px;
   text-align:center;position:relative;overflow:visible;
   animation:fade-in-up 0.5s ease 0.7s both;
-  box-shadow:0 4px 16px rgba(249,115,22,0.08);
+  box-shadow:0 4px 16px rgba(0,0,0,0.35);
 }
 .countdown-wrap::before{
   content:'';position:absolute;inset:0;border-radius:16px;
-  background:linear-gradient(135deg,rgba(249,115,22,0.04),rgba(251,146,60,0.02));
+  background:linear-gradient(135deg,rgba(0,0,0,0.08),rgba(0,0,0,0.02));
   pointer-events:none;
 }
 .countdown-label{
-  font-family:var(--font-sf);font-size:10px;font-weight:700;
-  color:rgba(249,115,22,0.8);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;
+  font-family:var(--font-sf);font-size:10px;font-weight:800;
+  color:#ffffff;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;
 }
 .countdown-timer-row{display:flex;align-items:center;justify-content:center;gap:6px;padding:2px 0;}
 .countdown-block{text-align:center;min-width:54px;}
@@ -1479,8 +1479,8 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   50%{filter:drop-shadow(0 0 16px rgba(239,68,68,0.85));}
 }
 .countdown-unit{
-  font-family:var(--font-sf);font-size:9px;font-weight:700;
-  color:rgba(239,68,68,0.7);text-transform:uppercase;letter-spacing:1.2px;margin-top:3px;
+  font-family:var(--font-sf);font-size:9px;font-weight:800;
+  color:#ffffff;text-transform:uppercase;letter-spacing:1.2px;margin-top:3px;
 }
 .countdown-colon{
   font-family:var(--font-sf);font-size:30px;font-weight:900;
@@ -1492,7 +1492,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 }
 @keyframes colon-blink{0%,50%{opacity:1}51%,100%{opacity:0.15}}
 .countdown-progress-bar{
-  height:4px;background:rgba(249,115,22,0.12);border-radius:99px;
+  height:4px;background:rgba(255,255,255,0.2);border-radius:99px;
   margin-top:10px;overflow:hidden;
 }
 .countdown-progress-fill{
@@ -1502,8 +1502,8 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   box-shadow:0 0 8px rgba(239,68,68,0.6);
 }
 .countdown-status{
-  font-family:var(--font-sf);font-size:11px;font-weight:500;
-  color:rgba(249,115,22,0.8);margin-top:8px;
+  font-family:var(--font-sf);font-size:11px;font-weight:800;
+  color:#ffffff;margin-top:8px;
 }
 
 /* Back button */
@@ -1741,7 +1741,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
     <!-- THANK YOU CARD -->
     <div class="success-thankyou-card">
       <span class="thankyou-emoji"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C12 3 9.5 5 9.5 8C9.5 9.2 10 10 10 10L8 12.5C7.4 13.2 7 14.1 7 15V19.5C7 20.3 7.7 21 8.5 21C9.3 21 10 20.3 10 19.5V16" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3C12 3 14.5 5 14.5 8C14.5 9.2 14 10 14 10L16 12.5C16.6 13.2 17 14.1 17 15V19.5C17 20.3 16.3 21 15.5 21C14.7 21 14 20.3 14 19.5V16" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19.5V17C10 16.4 10.4 16 11 16H13C13.6 16 14 16.4 14 17V19.5" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <div class="thankyou-headline">Thank You for Ordering with <span style="color:#ffffff;">Siplor</span><span style="color:#ef4444;">a</span>!</div>
+      <div class="thankyou-headline">Thank You for Ordering with <span style="color:#8B0000;">Siplor</span><span style="color:#8B0000;">a</span>!</div>
       <div class="thankyou-lines">
         Aapne humein ek mauka diya apni seva karne ka — yeh hamara saubhagya hai! 🌟<br/>
         Har dish hum banate hain dil se, sirf aapke liye.<br/>
@@ -1768,7 +1768,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
       <div class="countdown-progress-bar">
         <div class="countdown-progress-fill" id="cdProgress" style="width:100%"></div>
       </div>
-      <div class="countdown-status" id="cdStatus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:3px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg>Chef has received your order...</div>
+      <div class="countdown-status" id="cdStatus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:3px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"/></svg>Chef has received your order...</div>
     </div>
 
     <!-- BACK BUTTON -->
