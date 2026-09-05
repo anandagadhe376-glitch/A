@@ -582,7 +582,7 @@ a{text-decoration:none;color:inherit;}
 .chef-name{font-size:16px;font-weight:600;margin-bottom:4px;}
 .chef-footer{display:flex;align-items:center;justify-content:space-between;}
 .chef-price{font-size:14px;font-weight:700;color:var(--gold);}
-.chef-rating{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:4px;}
+.chef-rating{font-size:13px;font-weight:700;color:#fff;background:linear-gradient(180deg,#4CB841,#0F7603);display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;}
 
 /* ── BOTTOM NAV ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(10,10,15,0.97);border-top:1px solid var(--border);display:flex;padding:8px 0 16px;}
@@ -3094,7 +3094,7 @@ window.__loadMenu = async function() {
                 ${d.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(d.desc,6)}</div>`:''}
                 <div class="chef-footer">
                   <div class="chef-price">₹${d.price}</div>
-                  ${d.dealLabel?`<div style="font-size:10px;color:var(--green);font-weight:600">${d.dealLabel}</div>`:d.rating?`<div class="chef-rating">⭐ ${d.rating}</div>`:'<div class="chef-rating">⭐ 4.8</div>'}
+                  ${d.dealLabel?`<div style="font-size:10px;color:var(--green);font-weight:600">${d.dealLabel}</div>`:d.rating?`<div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${d.rating}</div>`:'<div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> 4.8</div>'}
                 </div>
               </div>
             </div>`).join('');
@@ -4008,7 +4008,7 @@ function renderChefPicks() {
       <div class="chef-info">
         <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">${c.name}</div>
         ${c.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(c.desc,6)}</div>`:''}
-        <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating">⭐ ${c.rating}</div></div>
+        <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div></div>
       </div>
     </div>`).join('');
   if(el && fbCards.length>0) el.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -4082,7 +4082,7 @@ function sortSection(section, dir) {
         <div class="chef-info">
           <div class="chef-badge">👨‍🍳 Chef's Pick</div>
           <div class="chef-name">${c.name}</div>
-          <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating">⭐ ${c.rating}</div></div>
+          <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div></div>
         </div>
       </div>`).join('');
     if(fbCards.length>0) el.insertAdjacentHTML('afterbegin', fbCards.join(''));
