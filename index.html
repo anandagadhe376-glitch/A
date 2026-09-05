@@ -1150,7 +1150,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 /* ── UPGRADED SUCCESS SCREEN ── */
 .order-success-overlay{
   position:fixed;inset:0;
-  background:linear-gradient(160deg,#060410 0%,#0a0818 50%,#041208 100%);
+  background:linear-gradient(160deg,#FFFFFF 0%,#FDFDFE 55%,#FBFBFC 100%);
   z-index:600;display:flex;align-items:center;justify-content:center;
   opacity:0;pointer-events:none;transition:opacity 0.5s;
   flex-direction:column;padding:0;overflow:hidden;
@@ -1345,7 +1345,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 .wow-tagline{
   font-family:var(--font-circular);
   font-size:11px;font-weight:700;
-  color:rgba(241,240,255,0.45);
+  color:rgba(30,20,50,0.45);
   letter-spacing:1px;text-transform:uppercase;
 }
 @keyframes hint-fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
@@ -1373,29 +1373,30 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 
 .success-sub{
   font-family:var(--font-sf);font-size:13px;font-weight:500;
-  color:#E2E0F0;text-align:center;line-height:1.7;margin-bottom:6px;
+  color:#4B4B57;text-align:center;line-height:1.7;margin-bottom:6px;
   animation:fade-in-up 0.5s ease 0.4s both;
 }
 @keyframes fade-in-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 
 .success-saved-badge{
   display:inline-flex;align-items:center;gap:6px;
-  background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);
+  background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.35);
   border-radius:99px;padding:5px 14px;
-  font-family:var(--font-sf);font-size:12px;font-weight:600;
-  color:#22c55e;margin-bottom:14px;
+  font-family:var(--font-sf);font-size:12px;font-weight:700;
+  color:#15803d;margin-bottom:14px;
   animation:fade-in-up 0.5s ease 0.5s both;
 }
 
 /* Order ID box */
 .success-order-id{
-  background:rgba(255,255,255,0.04);border:1px solid rgba(168,85,247,0.25);
+  background:#FAF7FF;border:1px solid rgba(168,85,247,0.25);
   border-radius:14px;padding:13px 22px;margin-bottom:14px;text-align:center;
   width:100%;animation:fade-in-up 0.5s ease 0.6s both;
+  box-shadow:0 2px 10px rgba(0,0,0,0.04);
 }
 .success-order-id-label{
   font-family:var(--font-sf);font-size:10px;font-weight:700;
-  letter-spacing:1.5px;text-transform:uppercase;color:rgba(241,240,255,0.45);margin-bottom:4px;
+  letter-spacing:1.5px;text-transform:uppercase;color:rgba(30,20,50,0.5);margin-bottom:4px;
 }
 .success-order-id strong{
   font-family:var(--font-sf);font-size:20px;font-weight:900;
@@ -1405,15 +1406,16 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 /* ── THANK YOU CARD (UPGRADED) ── */
 .success-thankyou-card{
   width:100%;
-  background:linear-gradient(135deg,rgba(34,197,94,0.09),rgba(168,85,247,0.09));
-  border:1px solid rgba(34,197,94,0.25);
+  background:linear-gradient(135deg,rgba(34,197,94,0.06),rgba(168,85,247,0.06));
+  border:1px solid rgba(34,197,94,0.22);
   border-radius:20px;padding:18px 16px;margin-bottom:14px;
   text-align:center;animation:fade-in-up 0.5s ease 0.65s both;
   position:relative;overflow:hidden;
+  box-shadow:0 4px 16px rgba(0,0,0,0.05);
 }
 .success-thankyou-card::before{
   content:'';position:absolute;inset:0;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);
   animation:card-shine 3s ease-in-out infinite;
 }
 @keyframes card-shine{0%{transform:translateX(-100%)}100%{transform:translateX(200%)}}
@@ -1421,31 +1423,30 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 @keyframes bounce-soft{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .thankyou-headline{
   font-family:var(--font-sf);font-size:15px;font-weight:900;
-  color:#22c55e;margin-bottom:8px;letter-spacing:0.3px;
+  color:#16a34a;margin-bottom:8px;letter-spacing:0.3px;
 }
 .thankyou-lines{
   font-family:var(--font-sf);font-size:12px;font-weight:400;
-  color:rgba(241,240,255,0.8);line-height:1.8;
+  color:rgba(30,20,50,0.7);line-height:1.8;
 }
 .thankyou-siplora-line{
   font-family:var(--font-sf);font-size:11px;font-weight:700;
-  color:#EAB308;margin-top:10px;opacity:1;
-  text-shadow:0 0 12px rgba(234,179,8,0.4);
+  color:#B8860B;margin-top:10px;opacity:1;
 }
 
 /* Countdown — now fully GREEN */
 .countdown-wrap{
   width:100%;
-  background:rgba(249,115,22,0.05);
-  border:1px solid rgba(249,115,22,0.3);
+  background:#FFF7EE;
+  border:1px solid rgba(249,115,22,0.25);
   border-radius:16px;padding:12px 16px 12px;margin-bottom:18px;
   text-align:center;position:relative;overflow:visible;
   animation:fade-in-up 0.5s ease 0.7s both;
-  box-shadow:0 0 20px rgba(249,115,22,0.08);
+  box-shadow:0 4px 16px rgba(249,115,22,0.08);
 }
 .countdown-wrap::before{
   content:'';position:absolute;inset:0;border-radius:16px;
-  background:linear-gradient(135deg,rgba(249,115,22,0.06),rgba(251,146,60,0.04));
+  background:linear-gradient(135deg,rgba(249,115,22,0.04),rgba(251,146,60,0.02));
   pointer-events:none;
 }
 .countdown-label{
@@ -1510,7 +1511,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 
 .success-glow{
   position:absolute;width:350px;height:350px;border-radius:50%;
-  background:radial-gradient(circle,rgba(34,197,94,0.15),transparent 70%);
+  background:radial-gradient(circle,rgba(34,197,94,0.08),transparent 70%);
   animation:success-glow-pulse 2.5s ease-in-out infinite;
   pointer-events:none;top:5%;left:50%;transform:translateX(-50%);
 }
@@ -1721,14 +1722,14 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 
     <!-- TITLE -->
     <div class="success-title">Order Placed Successfully!</div>
-    <div class="success-sub" id="successSubText">Hello! 🙏 Your order has been sent to the chef. Estimated time shown below! 🧑‍🍳</div>
+    <div class="success-sub" id="successSubText">Hello! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin:0 2px" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C12 3 9.5 5 9.5 8C9.5 9.2 10 10 10 10L8 12.5C7.4 13.2 7 14.1 7 15V19.5C7 20.3 7.7 21 8.5 21C9.3 21 10 20.3 10 19.5V16" stroke="#A855F7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3C12 3 14.5 5 14.5 8C14.5 9.2 14 10 14 10L16 12.5C16.6 13.2 17 14.1 17 15V19.5C17 20.3 16.3 21 15.5 21C14.7 21 14 20.3 14 19.5V16" stroke="#A855F7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19.5V17C10 16.4 10.4 16 11 16H13C13.6 16 14 16.4 14 17V19.5" stroke="#A855F7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg> Your order has been sent to the chef. Estimated time shown below! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin:0 2px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
     <div class="success-saved-badge">✅ Order saved successfully</div>
 
     <!-- ORDER ID hidden -->
 
     <!-- THANK YOU CARD -->
     <div class="success-thankyou-card">
-      <span class="thankyou-emoji">🙏</span>
+      <span class="thankyou-emoji"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C12 3 9.5 5 9.5 8C9.5 9.2 10 10 10 10L8 12.5C7.4 13.2 7 14.1 7 15V19.5C7 20.3 7.7 21 8.5 21C9.3 21 10 20.3 10 19.5V16" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3C12 3 14.5 5 14.5 8C14.5 9.2 14 10 14 10L16 12.5C16.6 13.2 17 14.1 17 15V19.5C17 20.3 16.3 21 15.5 21C14.7 21 14 20.3 14 19.5V16" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19.5V17C10 16.4 10.4 16 11 16H13C13.6 16 14 16.4 14 17V19.5" stroke="#22c55e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div class="thankyou-headline">Thank You for Ordering with <span style="color:#ffffff;">Siplor</span><span style="color:#ef4444;">a</span>!</div>
       <div class="thankyou-lines">
         Aapne humein ek mauka diya apni seva karne ka — yeh hamara saubhagya hai! 🌟<br/>
@@ -1756,7 +1757,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
       <div class="countdown-progress-bar">
         <div class="countdown-progress-fill" id="cdProgress" style="width:100%"></div>
       </div>
-      <div class="countdown-status" id="cdStatus">👨‍🍳 Chef has received your order...</div>
+      <div class="countdown-status" id="cdStatus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:3px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg>Chef has received your order...</div>
     </div>
 
     <!-- BACK BUTTON -->
@@ -5421,7 +5422,7 @@ function showOrderSuccess(orderId,savedOk) {
   try { const cnt = parseInt(localStorage.getItem('nova_order_count')||'0'); localStorage.setItem('nova_order_count', cnt+1); } catch(e){}
   const successOrderIdEl = document.getElementById('successOrderId');
   if(successOrderIdEl) successOrderIdEl.textContent=orderId;
-  document.getElementById('successSubText').innerHTML=`Hello <strong>${customerName}</strong>! 🙏<br>Your order has been sent to the chef. Estimated time shown below! 🍽️`;
+  document.getElementById('successSubText').innerHTML=`Hello <strong>${customerName}</strong>! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin:0 2px" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C12 3 9.5 5 9.5 8C9.5 9.2 10 10 10 10L8 12.5C7.4 13.2 7 14.1 7 15V19.5C7 20.3 7.7 21 8.5 21C9.3 21 10 20.3 10 19.5V16" stroke="#A855F7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3C12 3 14.5 5 14.5 8C14.5 9.2 14 10 14 10L16 12.5C16.6 13.2 17 14.1 17 15V19.5C17 20.3 16.3 21 15.5 21C14.7 21 14 20.3 14 19.5V16" stroke="#A855F7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 19.5V17C10 16.4 10.4 16 11 16H13C13.6 16 14 16.4 14 17V19.5" stroke="#A855F7" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><br>Your order has been sent to the chef. Estimated time shown below! <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin:0 2px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
   // Show/hide saved badge
   const savedBadge=document.querySelector('.success-saved-badge');
   if(savedBadge) savedBadge.style.display=savedOk?'inline-flex':'none';  // Show estimated time banner (hidden by default until chef sets it)
@@ -5879,7 +5880,7 @@ function startCountdown(totalMinutes) {
     }
 
     const pct=rem/TOTAL;
-    let msg='👨‍🍳 Chef has received your order...';
+    let msg='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:3px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg>Chef has received your order...';
     if(pct<0.8) msg='🔥 Khana pakna shuru ho gaya!';
     if(pct<0.6) msg='🍳 Everything is cooking perfectly...';
     if(pct<0.4) msg='⏰ Almost ready, just a moment!';
@@ -6166,7 +6167,7 @@ function renderOrdersPanel() {
         <div style="margin:12px 4px 0;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;">
           <div id="opBar" style="height:100%;width:${(_initRemSecs/(window._orderCountdownTotal||15*60))*100}%;background:linear-gradient(90deg,#F97316,#FBB024);border-radius:99px;transition:width 1s linear;box-shadow:0 0 8px rgba(249,115,22,0.5);"></div>
         </div>
-        <div id="opMsg" style="font-size:12px;color:rgba(249,115,22,0.8);margin-top:10px;font-weight:500;">👨‍🍳 Chef has received your order...</div>
+        <div id="opMsg" style="font-size:12px;color:rgba(249,115,22,0.8);margin-top:10px;font-weight:500;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:3px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg>Chef has received your order...</div>
       </div>
     </div>
 
@@ -6380,7 +6381,7 @@ function startOrdersPanelTimer() {
     if(stEl) stEl.style.borderColor = rem<=120 ? 'rgba(239,68,68,0.3)' : rem<=300 ? 'rgba(234,179,8,0.3)' : 'rgba(249,115,22,0.3)';
     if(stEl) stEl.style.background = rem<=120 ? 'rgba(239,68,68,0.12)' : rem<=300 ? 'rgba(234,179,8,0.12)' : 'rgba(249,115,22,0.12)';
 
-    let msg = '👨‍🍳 Chef has received your order...';
+    let msg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="vertical-align:-2px;margin-right:3px" xmlns="http://www.w3.org/2000/svg"><path d="M6 9C6 6.24 8.24 4 11 4H13C15.76 4 18 6.24 18 9V10H6V9Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 10H19V12C19 12.55 18.55 13 18 13H6C5.45 13 5 12.55 5 12V10Z" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 13V19C8 19.55 8.45 20 9 20H15C15.55 20 16 19.55 16 19V13" stroke="#F97316" stroke-width="1.6" stroke-linejoin="round"/></svg>Chef has received your order...';
     if(pct<0.8) msg = '🔥 Khana pakna shuru ho gaya!';
     if(pct<0.6) msg = '🍳 Cooking perfectly...';
     if(pct<0.4) msg = '⏰ Almost ready!';
