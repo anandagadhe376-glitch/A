@@ -410,7 +410,7 @@ a{text-decoration:none;color:inherit;}
 .review-text{font-size:11px;color:var(--text3);font-style:italic;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 
 /* ── QTY CONTROL ── */
-.qty-control{display:inline-flex;align-items:center;background:var(--glass2);border:none;border-radius:99px;overflow:hidden;}
+.qty-control{display:inline-flex;align-items:center;background:transparent;border:none;border-radius:0;overflow:hidden;}
 .qty-btn{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--purple);transition:all 0.15s;}
 .qty-btn:hover{background:var(--purple-dim);}
 .qty-display{min-width:28px;text-align:center;font-size:14px;font-weight:700;padding:0 2px;}
@@ -572,10 +572,12 @@ a{text-decoration:none;color:inherit;}
 /* ── CHEF PICKS ── */
 .chef-picks{display:flex;gap:10px;overflow-x:auto;padding:0 20px 20px;scrollbar-width:none;}
 .chef-picks::-webkit-scrollbar{display:none;}
-.chef-card{flex-shrink:0;width:200px;border-radius:var(--r-lg);background:var(--glass);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all 0.25s;}
+.chef-card{flex-shrink:0;width:200px;height:252px;border-radius:8px;background:var(--glass);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all 0.25s;display:flex;flex-direction:column;}
 .chef-card:hover{transform:translateY(-3px);border-color:rgba(234,179,8,0.3);box-shadow:0 8px 30px rgba(0,0,0,0.3),0 0 20px rgba(234,179,8,0.1);}
-.chef-img{height:130px;overflow:hidden;}
-.chef-info{padding:12px;}
+.chef-img{height:176px;flex-shrink:0;overflow:hidden;}
+.chef-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.chef-info{padding:10px 12px;height:76px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;justify-content:center;}
+.chef-desc-mini{font-size:11px;color:var(--text3);margin-bottom:4px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .chef-badge{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);border:1px solid rgba(234,179,8,0.25);border-radius:99px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--gold);margin-bottom:6px;}
 .chef-name{font-size:16px;font-weight:600;margin-bottom:4px;}
 .chef-footer{display:flex;align-items:center;justify-content:space-between;}
@@ -3085,12 +3087,11 @@ window.__loadMenu = async function() {
           const liveChefHtml = chefPicksLive.map(d=>`
             <div class="chef-card fb-chef-pick-card" onclick="quickAddByName('${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')">
               <div class="chef-img">
-                ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy" style="width:100%;height:130px;object-fit:cover"/>`:`<div style="width:100%;height:130px;background:linear-gradient(135deg,#1a1a2e,#EAB30822);display:flex;align-items:center;justify-content:center;font-size:44px">${d.emoji||'🍽️'}</div>`}
+                ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy"/>`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#EAB30822);display:flex;align-items:center;justify-content:center;font-size:44px">${d.emoji||'🍽️'}</div>`}
               </div>
               <div class="chef-info">
-                <div class="chef-badge" style="background:rgba(168,85,247,0.2);border-color:rgba(168,85,247,0.4);color:var(--purple)">👨‍🍳 Chef's Pick</div>
-                <div class="chef-name">${d.name}</div>
-                ${d.desc?`<div style="font-size:11px;color:var(--text3);margin-bottom:6px;line-height:1.3">${d.desc}</div>`:''}
+                <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">${d.name}</div>
+                ${d.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(d.desc,6)}</div>`:''}
                 <div class="chef-footer">
                   <div class="chef-price">₹${d.price}</div>
                   ${d.dealLabel?`<div style="font-size:10px;color:var(--green);font-weight:600">${d.dealLabel}</div>`:d.rating?`<div class="chef-rating">⭐ ${d.rating}</div>`:'<div class="chef-rating">⭐ 4.8</div>'}
@@ -3987,6 +3988,12 @@ function renderOffers() {
 }
 
 /* ══ CHEF PICKS ══ */
+function truncateWords(text, limit=8) {
+  if(!text) return '';
+  const words = String(text).trim().split(/\s+/);
+  if(words.length <= limit) return text;
+  return words.slice(0, limit).join(' ') + '...';
+}
 function renderChefPicks() {
   const el = document.getElementById('chefPicks');
   const fbCards = el ? Array.from(el.querySelectorAll('.fb-chef-pick-card')).map(c=>c.outerHTML) : [];
@@ -3999,8 +4006,8 @@ function renderChefPicks() {
     })})'>
       <div class="chef-img"><img src="${c.image}" alt="${c.name}" loading="lazy" /></div>
       <div class="chef-info">
-        <div class="chef-badge">👨‍🍳 Chef's Pick</div>
-        <div class="chef-name">${c.name}</div>
+        <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">${c.name}</div>
+        ${c.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(c.desc,6)}</div>`:''}
         <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating">⭐ ${c.rating}</div></div>
       </div>
     </div>`).join('');
