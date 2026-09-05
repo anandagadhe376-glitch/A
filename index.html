@@ -3075,12 +3075,11 @@ window.__loadMenu = async function() {
             <div class="offer-card fb-hot-deal-card" onclick="quickAddByName('${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')">
               <div class="offer-img-wrap">
                 ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`:`<div style="width:100%;height:150px;background:linear-gradient(135deg,#1a1a2e,#e74c3c22);display:flex;align-items:center;justify-content:center;font-size:36px">${d.emoji||'🍽️'}</div>`}
-                <div class="offer-badge" style="background:linear-gradient(135deg,#ef4444,#f97316)">${d.dealLabel||d.offerText||'Live Deal'}</div>
                 <div class="offer-fire">🔥</div>
               </div>
               <div class="offer-info">
-                <div class="offer-name">${d.name}</div>
                 <div class="offer-price">₹${d.price} ${d.origPrice&&d.origPrice>0?`<span style="color:var(--text3);text-decoration:line-through;font-size:10px">₹${d.origPrice}</span>`:''}</div>
+                <div class="offer-name">${d.name}</div>
               </div>
             </div>`).join('');
           offersTrack.insertAdjacentHTML('afterbegin', liveCardsHtml);
@@ -3120,13 +3119,12 @@ window.__loadMenu = async function() {
             ${d.imageUrl
               ? `<img class="special-card-img" src="${d.imageUrl}" alt="${d.name}" loading="lazy" onerror="this.style.background='#1a1a2e'" />`
               : `<div class="special-card-img" style="background:linear-gradient(135deg,#1a1a2e,#EAB30822);display:flex;align-items:center;justify-content:center;font-size:44px">${d.emoji||'🍽️'}</div>`}
-            <div class="special-card-badge" style="background:linear-gradient(135deg,#EAB308,#F97316)">⭐ Today Special</div>
             <div class="special-card-info">
-              <div class="special-card-name">${d.name}</div>
               <div style="display:flex;align-items:baseline;gap:4px">
                 <span class="special-card-price">₹${d.price}</span>
                 ${d.dealLabel?`<span style="font-size:10px;color:var(--gold);font-weight:700">${d.dealLabel}</span>`:''}
               </div>
+              <div class="special-card-name">${d.name}</div>
             </div>
           </div>`).join('');
         todaySpecialTrack.insertAdjacentHTML('afterbegin', liveTodayHtml);
@@ -3823,13 +3821,12 @@ function renderTodaySpecials() {
   track.innerHTML = APP_DATA.todaySpecials.map(s => `
     <div class="special-card" onclick="quickAddByName('${s.name.replace(/'/g,"\'")}','${s.image}','${s.price}')">
       <img class="special-card-img" src="${s.image}" alt="${s.name}" loading="lazy" onerror="this.style.background='#1a1a2e'" />
-      <div class="special-card-badge">${s.offer}</div>
       <div class="special-card-info">
-        <div class="special-card-name">${s.name}</div>
         <div style="display:flex;align-items:baseline;gap:0">
           <span class="special-card-price">${s.price}</span>
           <span class="special-card-orig">${s.original}</span>
         </div>
+        <div class="special-card-name">${s.name}</div>
       </div>
     </div>`).join('');
   if(fbCards.length>0) track.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -3984,12 +3981,11 @@ function renderOffers() {
     <div class="offer-card" onclick="quickAddByName('${o.name}','${o.image}','${o.price}')">
       <div class="offer-img-wrap">
         <img src="${o.image}" alt="${o.name}" loading="lazy" />
-        <div class="offer-badge">${o.offer}</div>
         <div class="offer-fire">🔥</div>
       </div>
       <div class="offer-info">
-        <div class="offer-name">${o.name}</div>
         <div class="offer-price">${o.price} <span style="color:var(--text3);text-decoration:line-through;font-size:10px">${o.original}</span></div>
+        <div class="offer-name">${o.name}</div>
       </div>
     </div>`).join('');
   if(track && fbCards.length>0) track.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -4043,12 +4039,11 @@ function sortSection(section, dir) {
       <div class="offer-card" onclick="quickAddByName('${o.name}','${o.image}','${o.price}')">
         <div class="offer-img-wrap">
           <img src="${o.image}" alt="${o.name}" loading="lazy" />
-          <div class="offer-badge">${o.offer}</div>
           <div class="offer-fire">🔥</div>
         </div>
         <div class="offer-info">
-          <div class="offer-name">${o.name}</div>
           <div class="offer-price">${o.price} <span style="color:var(--text3);text-decoration:line-through;font-size:10px">${o.original}</span></div>
+          <div class="offer-name">${o.name}</div>
         </div>
       </div>`).join('');
     if(fbCards.length>0) track.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -4062,13 +4057,12 @@ function sortSection(section, dir) {
     track.innerHTML = sorted.map(s => `
       <div class="special-card" onclick="quickAddByName('${s.name.replace(/'/g,"\\'")}','${s.image}','${s.price}')">
         <img class="special-card-img" src="${s.image}" alt="${s.name}" loading="lazy" onerror="this.style.background='#1a1a2e'" />
-        <div class="special-card-badge">${s.offer}</div>
         <div class="special-card-info">
-          <div class="special-card-name">${s.name}</div>
           <div style="display:flex;align-items:baseline;gap:0">
             <span class="special-card-price">${s.price}</span>
             <span class="special-card-orig">${s.original}</span>
           </div>
+          <div class="special-card-name">${s.name}</div>
         </div>
       </div>`).join('');
 
