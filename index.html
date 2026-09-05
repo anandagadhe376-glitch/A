@@ -838,7 +838,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,0.10) 50%,transparent 60%);
   animation:special-shine 3.5s ease-in-out 1s infinite;pointer-events:none;
 }
-.special-card-img{width:152px;height:112px;object-fit:cover;display:block;transition:transform 0.3s;}
+.special-card-img{width:152px;height:112px;object-fit:contain;background:#fff;display:block;transition:transform 0.3s;}
 .special-card:hover .special-card-img{transform:scale(1.05);}
 .special-card-badge{
   position:absolute;top:8px;left:8px;
@@ -849,7 +849,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   animation:special-badge-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
 }
 .special-card-info{padding:9px 10px;}
-.special-card-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.special-card-name{font-size:12px;font-weight:700;color:#fff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#FE5102;padding:3px 6px;border-radius:5px;display:inline-block;max-width:100%;}
 .special-card-price{font-size:13px;font-weight:800;color:#F59E0B;}
 .special-card-orig{font-size:10px;color:var(--text3);text-decoration:line-through;margin-left:4px;}
 
