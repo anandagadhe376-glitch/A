@@ -369,14 +369,14 @@ a{text-decoration:none;color:inherit;}
 .offer-img-wrap img{width:100%;height:100%;object-fit:cover;}
 .offer-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;z-index:2;box-shadow:0 2px 8px rgba(239,68,68,0.5);}
 .offer-fire{position:absolute;top:8px;right:8px;font-size:16px;z-index:2;filter:drop-shadow(0 0 6px rgba(249,115,22,0.8));animation:fire-wiggle 1.5s ease-in-out infinite;}
-.offer-add-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #008000;padding:0;overflow:visible;}
-.offer-add-btn::before{content:'+';color:#008000;font-size:32px;font-weight:800;line-height:1;}
+.offer-add-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #22c55e;padding:0;overflow:visible;}
+.offer-add-btn::before{content:'+';color:#22c55e;font-size:32px;font-weight:800;line-height:1;}
 .mini-corner{position:absolute;right:8px;bottom:8px;z-index:3;}
-.mini-add-btn{width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #008000;padding:0;}
-.mini-add-btn::before{content:'+';color:#008000;font-size:32px;font-weight:800;line-height:1;}
-.mini-qty-stepper{display:flex;align-items:center;gap:0;background:#fff;border:2px solid #008000;border-radius:8px;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,0.35);min-width:70px;justify-content:space-between;}
-.mini-qty-btn{width:22px;height:26px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#008000;background:none;border:none;cursor:pointer;line-height:1;flex-shrink:0;}
-.mini-qty-count{min-width:16px;text-align:center;font-size:13px;font-weight:900;color:#008000;}
+.mini-add-btn{width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #22c55e;padding:0;}
+.mini-add-btn::before{content:'+';color:#22c55e;font-size:32px;font-weight:800;line-height:1;}
+.mini-qty-stepper{display:flex;align-items:center;gap:0;background:#fff;border:2px solid #22c55e;border-radius:8px;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,0.35);min-width:70px;justify-content:space-between;}
+.mini-qty-btn{width:22px;height:26px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#22c55e;background:none;border:none;cursor:pointer;line-height:1;flex-shrink:0;}
+.mini-qty-count{min-width:16px;text-align:center;font-size:13px;font-weight:900;color:#22c55e;}
 .mini-corner.inline{position:static;right:auto;bottom:auto;}
 .chef-name-row{display:flex;align-items:center;justify-content:space-between;gap:6px;}
 @keyframes fire-wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
@@ -863,8 +863,8 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 .special-card-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;padding-right:32px;}
 .special-card-price{font-size:15px;font-weight:800;color:#fff;}
 .special-card-orig{font-size:10px;color:rgba(255,255,255,0.75);text-decoration:line-through;margin-left:4px;}
-.special-add-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #008000;padding:0;overflow:visible;}
-.special-add-btn::before{content:'+';color:#008000;font-size:32px;font-weight:800;line-height:1;}
+.special-add-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #22c55e;padding:0;overflow:visible;}
+.special-add-btn::before{content:'+';color:#22c55e;font-size:32px;font-weight:800;line-height:1;}
 
 /* ── PREMIUM TICKET COUPON CARDS ── */
 .coupon-card{
@@ -1085,12 +1085,12 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 
     <!-- ANIMATED GREEN WELCOME LINES -->
     <div style="margin:8px 0 20px;text-align:center;">
-      <div id="gTagline" style="font-size:14px;font-weight:700;min-height:22px;color:#22c55e;letter-spacing:0.3px;text-shadow:0 0 18px rgba(34,197,94,0.5);"></div>
+      <div id="gTagline" style="font-size:14px;font-weight:700;min-height:22px;color:#008000;letter-spacing:0.3px;text-shadow:0 0 18px rgba(0,128,0,0.5);"></div>
       <div id="gSub" style="font-size:12px;color:rgba(241,240,255,0.55);min-height:18px;line-height:1.5;transition:opacity 0.5s;opacity:0;margin-top:4px;"></div>
     </div>
     <style>
       @keyframes gc-blink{0%,100%{opacity:1}50%{opacity:0}}
-      .gc{display:inline-block;width:2px;height:1em;background:#22c55e;vertical-align:middle;margin-left:2px;animation:gc-blink 0.7s step-end infinite;border-radius:2px;}
+      .gc{display:inline-block;width:2px;height:1em;background:#008000;vertical-align:middle;margin-left:2px;animation:gc-blink 0.7s step-end infinite;border-radius:2px;}
     </style>
     <script>
     (function(){
@@ -1193,6 +1193,15 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
    WOW VEG DISH SHOWCASE — Entry + Unique Exit
 ══════════════════════════════════════════════ */
 
+.wow-stage-bg{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:266px;
+  background:#000000;
+  z-index:0;
+}
 .wow-stage{
   width:100%;max-width:340px;
   margin:0 auto 6px;
@@ -1200,6 +1209,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   height:230px;
   perspective:1000px;
   flex-shrink:0;
+  z-index:1;
 }
 
 /* === CARDS === */
@@ -1354,10 +1364,10 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 .success-title{
   font-family:var(--font-sf);font-size:24px;font-weight:900;
   letter-spacing:-0.5px;text-align:center;
-  background:linear-gradient(135deg,#22c55e 0%,#4ade80 40%,#16a34a 70%,#86efac 100%);
+  background:linear-gradient(135deg,#008000 0%,#008000 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
   margin-bottom:6px;text-transform:uppercase;
-  filter:drop-shadow(0 0 16px rgba(34,197,94,0.5));
+  filter:drop-shadow(0 0 16px rgba(0,128,0,0.5));
   animation:title-pop-bounce 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.2s both, title-glow-pulse 2.5s ease-in-out 1.2s infinite;
 }
 @keyframes title-pop-bounce{
@@ -1367,8 +1377,8 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   100%{opacity:1;transform:scale(1) rotate(0deg);}
 }
 @keyframes title-glow-pulse{
-  0%,100%{filter:drop-shadow(0 0 10px rgba(34,197,94,0.4));}
-  50%{filter:drop-shadow(0 0 28px rgba(34,197,94,0.85));}
+  0%,100%{filter:drop-shadow(0 0 10px rgba(0,128,0,0.4));}
+  50%{filter:drop-shadow(0 0 28px rgba(0,128,0,0.85));}
 }
 
 .success-sub{
@@ -1381,9 +1391,9 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 .success-saved-badge{
   display:inline-flex;align-items:center;gap:6px;
   background:rgba(34,197,94,0.10);border:1px solid rgba(34,197,94,0.35);
-  border-radius:99px;padding:5px 14px;
+  border-radius:8px;padding:5px 14px;
   font-family:var(--font-sf);font-size:12px;font-weight:700;
-  color:#15803d;margin-bottom:14px;
+  color:#16a34a;margin-bottom:14px;
   animation:fade-in-up 0.5s ease 0.5s both;
 }
 
@@ -1423,7 +1433,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 @keyframes bounce-soft{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .thankyou-headline{
   font-family:var(--font-sf);font-size:15px;font-weight:900;
-  color:#16a34a;margin-bottom:8px;letter-spacing:0.3px;
+  color:#008000;margin-bottom:8px;letter-spacing:0.3px;
 }
 .thankyou-lines{
   font-family:var(--font-sf);font-size:12px;font-weight:400;
@@ -1531,6 +1541,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 
 <div class="order-success-overlay" id="orderSuccessOverlay">
   <div class="success-glow"></div>
+  <div class="wow-stage-bg"></div>
 
   <div class="success-scroll-inner">
     <!-- ══ WOW VEG DISH SHOWCASE ══ -->
@@ -5844,8 +5855,8 @@ function startCountdown(totalMinutes) {
   // Progress bar ko green color mein dikhaao
   const progressEl=document.getElementById('cdProgress');
   if(progressEl){
-    progressEl.style.background='linear-gradient(90deg,#22c55e,#4ade80)';
-    progressEl.style.boxShadow='0 0 12px rgba(34,197,94,0.5)';
+    progressEl.style.background='linear-gradient(90deg,#008000,#008000)';
+    progressEl.style.boxShadow='0 0 12px rgba(0,128,0,0.5)';
   }
   const minutesEl=document.getElementById('cdMinutes');
   const secondsEl=document.getElementById('cdSeconds');
@@ -5894,7 +5905,7 @@ function startCountdown(totalMinutes) {
       showInAppNotif('done','Khana Aa Gaya! 🎊',`${customerName ? customerName+',' : 'Aapka'} khana serve ho gaya! Enjoy karo aur dobara aana! ❤️`,'#22c55e', 0);
       sendPushNotif('Khana Aa Gaya! 🎊', `${customerName||'Aapka'} khana serve ho gaya! Enjoy at Siplora! ❤️`);
     }
-    document.getElementById('cdStatus').textContent=msg;
+    document.getElementById('cdStatus').innerHTML=msg;
   }
   tick(); countdownInterval=setInterval(tick,1000);
 }
