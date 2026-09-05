@@ -3117,7 +3117,7 @@ window.__loadMenu = async function() {
                 ${d.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(d.desc,6)}</div>`:''}
                 <div class="chef-footer">
                   <div class="chef-price">₹${d.price}</div>
-                  <div class="mini-corner inline" id="minicorner-${safeId('offer_'+d.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${d.name.replace(/\s+/g,'_')}','${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')"></button></div>
+                  <div class="mini-corner inline" id="minicorner-${safeId('offer_'+d.name.replace(/\s+/g,'_'))}"><button class="dish-add-btn-corner" onclick="event.stopPropagation();quickAddChef('offer_${d.name.replace(/\s+/g,'_')}','${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')"><span class="add-label">ADD</span></button></div>
                 </div>
               </div>
             </div>`).join('');
@@ -4034,7 +4034,7 @@ function renderChefPicks() {
           <div class="chef-rating" style="flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div>
         </div>
         ${c.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(c.desc,6)}</div>`:''}
-        <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="mini-corner inline" id="minicorner-${safeId('offer_'+c.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${c.name.replace(/\s+/g,'_')}','${c.name.replace(/'/g,"\\'")}','${c.image}','${c.price}')"></button></div></div>
+        <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="mini-corner inline" id="minicorner-${safeId('offer_'+c.name.replace(/\s+/g,'_'))}"><button class="dish-add-btn-corner" onclick="event.stopPropagation();quickAddChef('offer_${c.name.replace(/\s+/g,'_')}','${c.name.replace(/'/g,"\\'")}','${c.image}','${c.price}')"><span class="add-label">ADD</span></button></div></div>
       </div>
     </div>`).join('');
   if(el && fbCards.length>0) el.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -4111,7 +4111,7 @@ function sortSection(section, dir) {
             <div class="chef-name" style="flex:1;min-width:0;">${c.name}</div>
             <div class="chef-rating" style="flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div>
           </div>
-          <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="mini-corner inline" id="minicorner-${safeId('offer_'+c.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${c.name.replace(/\s+/g,'_')}','${c.name.replace(/'/g,"\\'")}','${c.image}','${c.price}')"></button></div></div>
+          <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="mini-corner inline" id="minicorner-${safeId('offer_'+c.name.replace(/\s+/g,'_'))}"><button class="dish-add-btn-corner" onclick="event.stopPropagation();quickAddChef('offer_${c.name.replace(/\s+/g,'_')}','${c.name.replace(/'/g,"\\'")}','${c.image}','${c.price}')"><span class="add-label">ADD</span></button></div></div>
         </div>
       </div>`).join('');
     if(fbCards.length>0) el.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -5015,6 +5015,32 @@ function refreshMiniCorner(id,name,image,price) {
   }
 }
 window.refreshMiniCorner = refreshMiniCorner;
+
+function quickAddChef(id,name,image,price) {
+  addToCart({id,name,image,price});
+  refreshChefCorner(id,name,image,price);
+}
+window.quickAddChef = quickAddChef;
+
+function refreshChefCorner(id,name,image,price) {
+  const sid = safeId(id);
+  const wrap = document.getElementById('minicorner-'+sid);
+  if(!wrap) return;
+  const qty = cartQty(id);
+  const nameEsc = name.replace(/'/g,"\\'");
+  const imageEsc = (image||'').replace(/'/g,"\\'");
+  const priceEsc = (price+'').replace(/'/g,"\\'");
+  if(qty > 0) {
+    wrap.innerHTML = `<div class="dish-qty-stepper popped-in" onclick="event.stopPropagation()">
+      <button class="dish-qty-minus" onclick="event.stopPropagation();removeFromCartOne('${id}');refreshChefCorner('${id}','${nameEsc}','${imageEsc}','${priceEsc}')">−</button>
+      <span class="dish-qty-count">${qty}</span>
+      <button class="dish-qty-plus" onclick="event.stopPropagation();quickAddChef('${id}','${nameEsc}','${imageEsc}','${priceEsc}')">+</button>
+    </div>`;
+  } else {
+    wrap.innerHTML = `<button class="dish-add-btn-corner" onclick="event.stopPropagation();quickAddChef('${id}','${nameEsc}','${imageEsc}','${priceEsc}')"><span class="add-label">ADD</span></button>`;
+  }
+}
+window.refreshChefCorner = refreshChefCorner;
 
 function addToCart(item) {
   const ex=cartItems.find(i=>i.id===item.id);
