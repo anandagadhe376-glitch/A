@@ -371,6 +371,12 @@ a{text-decoration:none;color:inherit;}
 .offer-fire{position:absolute;top:8px;right:8px;font-size:16px;z-index:2;filter:drop-shadow(0 0 6px rgba(249,115,22,0.8));animation:fire-wiggle 1.5s ease-in-out infinite;}
 .offer-add-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #008000;padding:0;overflow:visible;}
 .offer-add-btn::before{content:'+';color:#008000;font-size:32px;font-weight:800;line-height:1;}
+.mini-corner{position:absolute;right:8px;bottom:8px;z-index:3;}
+.mini-add-btn{width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #008000;padding:0;}
+.mini-add-btn::before{content:'+';color:#008000;font-size:32px;font-weight:800;line-height:1;}
+.mini-qty-stepper{display:flex;align-items:center;gap:0;background:#fff;border:2px solid #008000;border-radius:8px;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,0.35);min-width:70px;justify-content:space-between;}
+.mini-qty-btn{width:22px;height:26px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#008000;background:none;border:none;cursor:pointer;line-height:1;flex-shrink:0;}
+.mini-qty-count{min-width:16px;text-align:center;font-size:13px;font-weight:900;color:#008000;}
 @keyframes fire-wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 .offer-info{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.75));z-index:2;}
 .offer-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px;}
@@ -852,9 +858,11 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
   animation:special-badge-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.4s both;
 }
 .special-card-info{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.75));}
-.special-card-name{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
-.special-card-price{font-size:13px;font-weight:800;color:#fff;}
+.special-card-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;padding-right:32px;}
+.special-card-price{font-size:15px;font-weight:800;color:#fff;}
 .special-card-orig{font-size:10px;color:rgba(255,255,255,0.75);text-decoration:line-through;margin-left:4px;}
+.special-add-btn{position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:center;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,0.35);border:2px solid #008000;padding:0;overflow:visible;}
+.special-add-btn::before{content:'+';color:#008000;font-size:32px;font-weight:800;line-height:1;}
 
 /* ── PREMIUM TICKET COUPON CARDS ── */
 .coupon-card{
@@ -3078,7 +3086,7 @@ window.__loadMenu = async function() {
               <div class="offer-img-wrap">
                 ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy" style="width:100%;height:100%;object-fit:cover"/>`:`<div style="width:100%;height:150px;background:linear-gradient(135deg,#1a1a2e,#e74c3c22);display:flex;align-items:center;justify-content:center;font-size:36px">${d.emoji||'🍽️'}</div>`}
                 <div class="offer-fire">🔥</div>
-                <button class="offer-add-btn" onclick="event.stopPropagation();"></button>
+                <div class="mini-corner" id="minicorner-${safeId('offer_'+d.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${d.name.replace(/\s+/g,'_')}','${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')"></button></div>
               </div>
               <div class="offer-info">
                 <div class="offer-price">₹${d.price} ${d.origPrice&&d.origPrice>0?`<span style="color:var(--text3);text-decoration:line-through;font-size:10px">₹${d.origPrice}</span>`:''}</div>
@@ -3129,6 +3137,7 @@ window.__loadMenu = async function() {
               </div>
               <div class="special-card-name">${d.name}</div>
             </div>
+            <div class="mini-corner" id="minicorner-${safeId('offer_'+d.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${d.name.replace(/\s+/g,'_')}','${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')"></button></div>
           </div>`).join('');
         todaySpecialTrack.insertAdjacentHTML('afterbegin', liveTodayHtml);
         // Show the section in case it was hidden
@@ -3831,6 +3840,7 @@ function renderTodaySpecials() {
         </div>
         <div class="special-card-name">${s.name}</div>
       </div>
+      <div class="mini-corner" id="minicorner-${safeId('offer_'+s.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${s.name.replace(/\s+/g,'_')}','${s.name.replace(/'/g,"\\'")}','${s.image}','${s.price}')"></button></div>
     </div>`).join('');
   if(fbCards.length>0) track.insertAdjacentHTML('afterbegin', fbCards.join(''));
 }
@@ -3985,7 +3995,7 @@ function renderOffers() {
       <div class="offer-img-wrap">
         <img src="${o.image}" alt="${o.name}" loading="lazy" />
         <div class="offer-fire">🔥</div>
-        <button class="offer-add-btn" onclick="event.stopPropagation();"></button>
+        <div class="mini-corner" id="minicorner-${safeId('offer_'+o.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${o.name.replace(/\s+/g,'_')}','${o.name.replace(/'/g,"\\'")}','${o.image}','${o.price}')"></button></div>
       </div>
       <div class="offer-info">
         <div class="offer-price">${o.price} <span style="color:var(--text3);text-decoration:line-through;font-size:10px">${o.original}</span></div>
@@ -4044,7 +4054,7 @@ function sortSection(section, dir) {
         <div class="offer-img-wrap">
           <img src="${o.image}" alt="${o.name}" loading="lazy" />
           <div class="offer-fire">🔥</div>
-          <button class="offer-add-btn" onclick="event.stopPropagation();"></button>
+          <div class="mini-corner" id="minicorner-${safeId('offer_'+o.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${o.name.replace(/\s+/g,'_')}','${o.name.replace(/'/g,"\\'")}','${o.image}','${o.price}')"></button></div>
         </div>
         <div class="offer-info">
           <div class="offer-price">${o.price} <span style="color:var(--text3);text-decoration:line-through;font-size:10px">${o.original}</span></div>
@@ -4069,6 +4079,7 @@ function sortSection(section, dir) {
           </div>
           <div class="special-card-name">${s.name}</div>
         </div>
+        <div class="mini-corner" id="minicorner-${safeId('offer_'+s.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${s.name.replace(/\s+/g,'_')}','${s.name.replace(/'/g,"\\'")}','${s.image}','${s.price}')"></button></div>
       </div>`).join('');
 
   } else if(section === 'chef') {
@@ -4967,6 +4978,32 @@ function quickAddByName(name,image,price) {
   addToCart({id:'offer_'+name.replace(/\s+/g,'_'),name,image,price});
 }
 window.quickAddByName = quickAddByName;
+
+function quickAddMini(id,name,image,price) {
+  addToCart({id,name,image,price});
+  refreshMiniCorner(id,name,image,price);
+}
+window.quickAddMini = quickAddMini;
+
+function refreshMiniCorner(id,name,image,price) {
+  const sid = safeId(id);
+  const wrap = document.getElementById('minicorner-'+sid);
+  if(!wrap) return;
+  const qty = cartQty(id);
+  const nameEsc = name.replace(/'/g,"\\'");
+  const imageEsc = (image||'').replace(/'/g,"\\'");
+  const priceEsc = (price+'').replace(/'/g,"\\'");
+  if(qty > 0) {
+    wrap.innerHTML = `<div class="mini-qty-stepper" onclick="event.stopPropagation()">
+      <button class="mini-qty-btn" onclick="event.stopPropagation();removeFromCartOne('${id}');refreshMiniCorner('${id}','${nameEsc}','${imageEsc}','${priceEsc}')">−</button>
+      <span class="mini-qty-count">${qty}</span>
+      <button class="mini-qty-btn" onclick="event.stopPropagation();quickAddMini('${id}','${nameEsc}','${imageEsc}','${priceEsc}')">+</button>
+    </div>`;
+  } else {
+    wrap.innerHTML = `<button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('${id}','${nameEsc}','${imageEsc}','${priceEsc}')"></button>`;
+  }
+}
+window.refreshMiniCorner = refreshMiniCorner;
 
 function addToCart(item) {
   const ex=cartItems.find(i=>i.id===item.id);
