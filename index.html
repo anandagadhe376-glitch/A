@@ -401,7 +401,7 @@ a{text-decoration:none;color:inherit;}
 .dish-desc{font-size:11px;color:var(--text3);margin-bottom:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;}
 .dish-footer{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:nowrap;}
 .dish-price{font-size:15px;font-weight:800;color:var(--gold);white-space:nowrap;}
-.dish-rating{display:flex;align-items:center;gap:2px;font-size:11px;color:var(--text2);white-space:nowrap;}
+.dish-rating{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#fff;background:linear-gradient(180deg,#4CB841,#0F7603);padding:3px 8px;border-radius:4px;white-space:nowrap;}
 .dish-add-btn{padding:5px 10px;border-radius:10px;background:linear-gradient(135deg,#22c55e,#16a34a);display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;font-weight:800;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(34,197,94,0.45);transition:all 0.2s;flex-shrink:0;border:none;cursor:pointer;}
 .dish-add-btn:hover{transform:scale(1.08);box-shadow:0 4px 20px rgba(34,197,94,0.65);}
 .stars{display:flex;gap:1px;}
@@ -4184,7 +4184,7 @@ function dishCard(d) {
       ${d.desc ? `<div class="dish-desc">${d.desc}</div>` : ''}
       <div class="dish-footer">
         <div class="dish-price">${d.price}</div>
-        <div class="dish-rating"><div class="stars">${starsHtml(avgRating)}</div>&nbsp;${avgRating}${ratingCount ? `<span style="color:var(--text3);font-size:10px">(${ratingCount})</span>` : ''}</div>
+        <div class="dish-rating">${starsHtml(avgRating)}${avgRating}${ratingCount ? `<span style="color:#fff;opacity:0.8;font-size:10px">(${ratingCount})</span>` : ''}</div>
       </div>
       <!-- Customer Star Rating -->
       <div class="customer-rate-wrap" onclick="event.stopPropagation()">
@@ -4197,10 +4197,7 @@ function dishCard(d) {
 }
 
 function starsHtml(r) {
-  let h=''; const f=Math.floor(r);
-  for(let i=0;i<f;i++) h+='<span class="star">⭐</span>';
-  if(r%1>=0.5) h+='<span class="star" style="opacity:0.6">⭐</span>';
-  return h;
+  return '<svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg>';
 }
 
 /* ══ CUSTOMER RATINGS ══ */
@@ -4235,7 +4232,7 @@ async function submitRating(dishId, stars) {
     const ratingEl = cardEl.querySelector('.dish-rating');
     if(ratingEl){
       const avg = (window._dishRatings[dishId].sum/window._dishRatings[dishId].count).toFixed(1);
-      ratingEl.innerHTML = `<div class="stars">${starsHtml(avg)}</div> ${avg}<span style="color:var(--text3);font-size:10px">(${window._dishRatings[dishId].count})</span>`;
+      ratingEl.innerHTML = `${starsHtml(avg)}${avg}<span style="color:#fff;opacity:0.8;font-size:10px">(${window._dishRatings[dishId].count})</span>`;
     }
   } catch(e){ console.error('Rating save error:',e); }
 }
