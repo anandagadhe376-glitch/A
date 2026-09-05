@@ -377,6 +377,8 @@ a{text-decoration:none;color:inherit;}
 .mini-qty-stepper{display:flex;align-items:center;gap:0;background:#fff;border:2px solid #008000;border-radius:8px;padding:2px;box-shadow:0 2px 8px rgba(0,0,0,0.35);min-width:70px;justify-content:space-between;}
 .mini-qty-btn{width:22px;height:26px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#008000;background:none;border:none;cursor:pointer;line-height:1;flex-shrink:0;}
 .mini-qty-count{min-width:16px;text-align:center;font-size:13px;font-weight:900;color:#008000;}
+.mini-corner.inline{position:static;right:auto;bottom:auto;}
+.chef-name-row{display:flex;align-items:center;justify-content:space-between;gap:6px;}
 @keyframes fire-wiggle{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 .offer-info{position:absolute;left:0;right:0;bottom:0;padding:8px 10px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.75));z-index:2;}
 .offer-name{font-size:15px;font-weight:700;color:#fff;margin-bottom:2px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:32px;}
@@ -3108,11 +3110,14 @@ window.__loadMenu = async function() {
                 ${d.imageUrl?`<img src="${d.imageUrl}" alt="${d.name}" loading="lazy"/>`:`<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e,#EAB30822);display:flex;align-items:center;justify-content:center;font-size:44px">${d.emoji||'🍽️'}</div>`}
               </div>
               <div class="chef-info">
-                <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">${d.name}</div>
+                <div class="chef-name-row">
+                  <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:0;flex:1;min-width:0;">${d.name}</div>
+                  ${d.dealLabel?`<div style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0;">${d.dealLabel}</div>`:d.rating?`<div class="chef-rating" style="flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${d.rating}</div>`:'<div class="chef-rating" style="flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> 4.8</div>'}
+                </div>
                 ${d.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(d.desc,6)}</div>`:''}
                 <div class="chef-footer">
                   <div class="chef-price">₹${d.price}</div>
-                  ${d.dealLabel?`<div style="font-size:10px;color:var(--green);font-weight:600">${d.dealLabel}</div>`:d.rating?`<div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${d.rating}</div>`:'<div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> 4.8</div>'}
+                  <div class="mini-corner inline" id="minicorner-${safeId('offer_'+d.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${d.name.replace(/\s+/g,'_')}','${d.name.replace(/'/g,"\\'")}','${d.imageUrl||''}','₹${d.price}')"></button></div>
                 </div>
               </div>
             </div>`).join('');
@@ -4024,9 +4029,12 @@ function renderChefPicks() {
     })})'>
       <div class="chef-img"><img src="${c.image}" alt="${c.name}" loading="lazy" /></div>
       <div class="chef-info">
-        <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px;">${c.name}</div>
+        <div class="chef-name-row">
+          <div class="chef-name" style="font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:0;flex:1;min-width:0;">${c.name}</div>
+          <div class="chef-rating" style="flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div>
+        </div>
         ${c.desc?`<div class="chef-desc-mini" style="-webkit-line-clamp:1;">${truncateWords(c.desc,6)}</div>`:''}
-        <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div></div>
+        <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="mini-corner inline" id="minicorner-${safeId('offer_'+c.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${c.name.replace(/\s+/g,'_')}','${c.name.replace(/'/g,"\\'")}','${c.image}','${c.price}')"></button></div></div>
       </div>
     </div>`).join('');
   if(el && fbCards.length>0) el.insertAdjacentHTML('afterbegin', fbCards.join(''));
@@ -4099,8 +4107,11 @@ function sortSection(section, dir) {
         <div class="chef-img"><img src="${c.image}" alt="${c.name}" loading="lazy" /></div>
         <div class="chef-info">
           <div class="chef-badge">👨‍🍳 Chef's Pick</div>
-          <div class="chef-name">${c.name}</div>
-          <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="chef-rating"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div></div>
+          <div class="chef-name-row">
+            <div class="chef-name" style="flex:1;min-width:0;">${c.name}</div>
+            <div class="chef-rating" style="flex-shrink:0;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff" style="flex-shrink:0"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.7L5.8 21l1.6-7L2 9.2l7.1-.6z"/></svg> ${c.rating}</div>
+          </div>
+          <div class="chef-footer"><div class="chef-price">${c.price}</div><div class="mini-corner inline" id="minicorner-${safeId('offer_'+c.name.replace(/\s+/g,'_'))}"><button class="mini-add-btn" onclick="event.stopPropagation();quickAddMini('offer_${c.name.replace(/\s+/g,'_')}','${c.name.replace(/'/g,"\\'")}','${c.image}','${c.price}')"></button></div></div>
         </div>
       </div>`).join('');
     if(fbCards.length>0) el.insertAdjacentHTML('afterbegin', fbCards.join(''));
