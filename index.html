@@ -387,6 +387,7 @@ a{text-decoration:none;color:inherit;}
 .cat-filter-chips::-webkit-scrollbar{display:none;}
 .cat-filter-chip{flex-shrink:0;padding:7px 13px;border-radius:6px;border:1.5px solid var(--border);background:var(--glass);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap;transition:all 0.2s;}
 .cat-filter-chip.selected{border-color:var(--green);background:rgba(34,197,94,0.12);color:var(--green);}
+.dish-card.cat-hidden{display:none!important;}
 
 /* ── DISH GRID ── */
 .dish-grid{display:grid;grid-template-columns:repeat(2,1fr)!important;gap:12px;padding:0 16px 20px;width:100%;box-sizing:border-box;}.dish-card{max-width:100%;}
@@ -4159,10 +4160,19 @@ function renderMenu(filter='all') {
         <div class="cat-filter-chip" data-type="veg" onclick="catDishFilter('${safeCatId}','veg',this)">🌿 Veg</div>
         <div class="cat-filter-chip" data-type="nonveg" onclick="catDishFilter('${safeCatId}','nonveg',this)">🍗 Non-Veg</div>
         <div class="cat-filter-chip" data-type="under100" onclick="catDishFilter('${safeCatId}','under100',this)">💰 Under ₹100</div>
+        <div class="cat-filter-chip" data-type="under160" onclick="catDishFilter('${safeCatId}','under160',this)">💰 Under ₹160</div>
         <div class="cat-filter-chip" data-type="under200" onclick="catDishFilter('${safeCatId}','under200',this)">💵 Under ₹200</div>
+        <div class="cat-filter-chip" data-type="under250" onclick="catDishFilter('${safeCatId}','under250',this)">💵 Under ₹250</div>
+        <div class="cat-filter-chip" data-type="under300" onclick="catDishFilter('${safeCatId}','under300',this)">💵 Under ₹300</div>
+        <div class="cat-filter-chip" data-type="under350" onclick="catDishFilter('${safeCatId}','under350',this)">💵 Under ₹350</div>
         <div class="cat-filter-chip" data-type="offer" onclick="catDishFilter('${safeCatId}','offer',this)">🔥 On Offer</div>
         <div class="cat-filter-chip" data-type="bestseller" onclick="catDishFilter('${safeCatId}','bestseller',this)">🏆 Bestseller</div>
         <div class="cat-filter-chip" data-type="rating4plus" onclick="catDishFilter('${safeCatId}','rating4plus',this)">⭐ 4+ Rating</div>
+        <div class="cat-filter-chip" data-type="fivestar" onclick="catDishFilter('${safeCatId}','fivestar',this)">🌟 5 Star</div>
+        <div class="cat-filter-chip" data-type="premium" onclick="catDishFilter('${safeCatId}','premium',this)">💎 Premium ₹300+</div>
+        <div class="cat-filter-chip" data-type="budget" onclick="catDishFilter('${safeCatId}','budget',this)">🪙 Budget Pick</div>
+        <div class="cat-filter-chip" data-type="trending" onclick="catDishFilter('${safeCatId}','trending',this)">📈 Trending</div>
+        <div class="cat-filter-chip" data-type="popular" onclick="catDishFilter('${safeCatId}','popular',this)">👍 Popular</div>
         <div class="cat-filter-chip" data-type="rating" onclick="catDishFilter('${safeCatId}','rating',this)">⭐ Top Rated</div>
         <div class="cat-filter-chip" data-type="price_low" onclick="catDishFilter('${safeCatId}','price_low',this)">₹ Low→High</div>
         <div class="cat-filter-chip" data-type="price_high" onclick="catDishFilter('${safeCatId}','price_high',this)">₹ High→Low</div>
@@ -4175,7 +4185,7 @@ function renderMenu(filter='all') {
 }
 
 /* ── PER-CATEGORY QUICK FILTERS (Full Menu) ── */
-const CAT_FILTER_TYPES = ['veg','nonveg','under100','under200','offer','bestseller','rating4plus'];
+const CAT_FILTER_TYPES = ['veg','nonveg','under100','under160','under200','under250','under300','under350','offer','bestseller','rating4plus','fivestar','premium','budget','trending','popular'];
 const CAT_SORT_TYPES = ['rating','price_low','price_high','az','za'];
 
 function catDishFilter(catId, type, el){
@@ -4188,7 +4198,7 @@ function catDishFilter(catId, type, el){
   if(CAT_FILTER_TYPES.includes(type)){
     chipsWrap.querySelectorAll('.cat-filter-chip').forEach(c=>{ if(CAT_FILTER_TYPES.includes(c.getAttribute('data-type'))) c.classList.remove('selected'); });
     if(wasSelected){
-      cards.forEach(c=>c.style.display='');
+      cards.forEach(c=>c.classList.remove('cat-hidden'));
     } else {
       el.classList.add('selected');
       cards.forEach(c=>{
@@ -4200,11 +4210,20 @@ function catDishFilter(catId, type, el){
         if(type==='veg') show = veg;
         else if(type==='nonveg') show = !veg;
         else if(type==='under100') show = price < 100;
+        else if(type==='under160') show = price < 160;
         else if(type==='under200') show = price < 200;
+        else if(type==='under250') show = price < 250;
+        else if(type==='under300') show = price < 300;
+        else if(type==='under350') show = price < 350;
         else if(type==='offer') show = hasOffer;
         else if(type==='bestseller') show = rating >= 4.5;
         else if(type==='rating4plus') show = rating >= 4;
-        c.style.display = show ? '' : 'none';
+        else if(type==='fivestar') show = rating >= 4.8;
+        else if(type==='premium') show = price >= 300;
+        else if(type==='budget') show = price < 120;
+        else if(type==='trending') show = hasOffer && rating >= 4;
+        else if(type==='popular') show = rating >= 4.3;
+        c.classList.toggle('cat-hidden', !show);
       });
     }
     return;
