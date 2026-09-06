@@ -325,7 +325,7 @@ a{text-decoration:none;color:inherit;}
 .rolling-track--chef{gap:10px;}
 
 
-.sec-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 4px;}
+.sec-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 2px;}
 .sec-title{font-family:var(--font-circular);font-size:20px;font-weight:700;letter-spacing:-0.3px;}
 .sec-link{font-size:13px;color:var(--purple);}
 
@@ -387,7 +387,7 @@ a{text-decoration:none;color:inherit;}
 /* ── PILLS ── */
 .cat-pills{display:flex;gap:8px;overflow-x:auto;padding:0 20px 20px;scrollbar-width:none;}
 .cat-pills::-webkit-scrollbar{display:none;}
-.pill{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 12px;border-radius:14px;border:none;background:transparent;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.pill{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px;border-radius:14px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .pill.active{background:var(--purple-dim);color:var(--purple);}
 .pill:hover:not(.active){background:var(--glass);color:var(--text);}
 
@@ -2479,7 +2479,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 .price-ticker-wrap{
   overflow:hidden;
   padding:0 20px;
-  margin-bottom:10px;
+  margin-bottom:2px;
   position:relative;
 }
 .price-ticker{
@@ -2526,7 +2526,7 @@ main{padding-bottom:96px;margin:0;padding-top:0;}
 }
 /* Placeholder to hold height */
 .price-ticker-placeholder{
-  height:32px;
+  height:22px;
   display:flex;align-items:center;
   position:relative;
 }
@@ -4082,8 +4082,8 @@ function renderPills() {
   const all = [{id:'all',name:'All',emoji:'🌟'}, ...APP_DATA.categories.map(c=>({id:c.id,name:c.name,emoji:c.emoji}))];
   document.getElementById('catPills').innerHTML = all.map((c,i) => {
     const topEl = i===0
-      ? `<div style="width:36px;height:36px;border-radius:10px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`
-      : `<img src="${getCatImage(c.id,c.name)}" alt="${c.name}" loading="lazy" style="width:36px;height:36px;object-fit:contain;display:block;background:transparent;" />`;
+      ? `<div style="width:46px;height:46px;border-radius:12px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`
+      : `<img src="${getCatImage(c.id,c.name)}" alt="${c.name}" loading="lazy" style="width:46px;height:46px;object-fit:contain;display:block;background:transparent;" />`;
     return `<div class="pill ${i===0?'active':''}" onclick="filterCat(this,'${c.id}')">${topEl}<span>${c.name}</span></div>`;
   }).join('');
 }
