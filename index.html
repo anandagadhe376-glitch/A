@@ -387,8 +387,8 @@ a{text-decoration:none;color:inherit;}
 /* ── PILLS ── */
 .cat-pills{display:flex;gap:8px;overflow-x:auto;padding:0 20px 20px;scrollbar-width:none;}
 .cat-pills::-webkit-scrollbar{display:none;}
-.pill{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px;border-radius:14px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-.pill.active{background:var(--purple-dim);color:var(--purple);}
+.pill{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 10px 4px;border-radius:14px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.pill.active{background:rgba(0,128,1,0.12);color:#008001;}
 .pill:hover:not(.active){background:var(--glass);color:var(--text);}
 
 /* ── CATEGORY SECTION ── */
@@ -4082,8 +4082,8 @@ function renderPills() {
   const all = [{id:'all',name:'All',emoji:'🌟'}, ...APP_DATA.categories.map(c=>({id:c.id,name:c.name,emoji:c.emoji}))];
   document.getElementById('catPills').innerHTML = all.map((c,i) => {
     const topEl = i===0
-      ? `<div style="width:46px;height:46px;border-radius:12px;background:var(--purple-dim);display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`
-      : `<img src="${getCatImage(c.id,c.name)}" alt="${c.name}" loading="lazy" style="width:46px;height:46px;object-fit:contain;display:block;background:transparent;" />`;
+      ? `<div style="width:62px;height:62px;border-radius:50%;background:var(--purple-dim);display:flex;align-items:center;justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>`
+      : `<img src="${getCatImage(c.id,c.name)}" alt="${c.name}" loading="lazy" style="width:62px;height:62px;object-fit:cover;display:block;border-radius:50%;background:var(--glass2);" />`;
     return `<div class="pill ${i===0?'active':''}" onclick="filterCat(this,'${c.id}')">${topEl}<span>${c.name}</span></div>`;
   }).join('');
 }
